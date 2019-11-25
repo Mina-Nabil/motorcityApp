@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
-import 'package:motorcity/cars_model.dart';
+import 'package:motorcity/providers/cars_model.dart';
 
 
 
@@ -23,7 +23,7 @@ class SettingsPage extends StatelessWidget {
               
               Container(
                 width: double.infinity,
-                child: Text("Peogeut Server IP", 
+                child: Text("Peugeot Server IP", 
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: Colors.black,
@@ -73,7 +73,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   onPressed: ()  {
                     CarsModel.setServersIP(_peog.text, _mg.text) ;
-                    Navigator.pushReplacementNamed(context, '/home');
+                    Navigator.pop(context2);
                   }
                 ),
               )

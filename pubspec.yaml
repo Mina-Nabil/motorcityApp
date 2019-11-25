@@ -14,7 +14,7 @@ description: A project for managing Motorcity's inventory movement. App built fo
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -68,7 +68,20 @@ flutter:
     - assets/peugeot.png
     - assets/mg.png
     - assets/Motorcity_Logo.png
+    - assets/in-progress.png
+    - assets/new.png
 
+  fonts:
+  - family: NotoSerif
+    fonts:
+    - asset: assets/fonts/NotoSerif-Regular.ttf
+    - asset: assets/fonts/NotoSerif-Italic.ttf
+      style: italic
+    - asset: assets/fonts/NotoSerif-Bold.ttf
+      weight: 700
+    - asset: assets/fonts/NotoSerif-BoldItalic.ttf
+      style: italic
+      weight: 700
   
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -96,3 +109,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+ 

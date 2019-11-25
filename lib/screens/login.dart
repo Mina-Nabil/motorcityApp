@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import './cars_model.dart';
+import 'package:provider/provider.dart';
+import '../providers/cars_model.dart';
 import "package:fab_menu/fab_menu.dart";
 import "./settings.dart";
 
@@ -14,12 +15,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String username ;
-
+  static dynamic carsProvider;
   String password ;
 
    List<MenuData> menuDataList;
 
     void initState(){
+      carsProvider = Provider.of<CarsModel>(context, listen: false);
     super.initState();
     menuDataList = [
       new MenuData(Icons.settings, (context, menuData) {
@@ -31,13 +33,14 @@ class _LoginPageState extends State<LoginPage> {
             )
         );
       },labelText: 'Settings'),
-      new MenuData(Icons.directions_car, (context, menuData) {
-        CarsModel.setSelectedServerPeugeot();
+      new MenuData(
+        Icons.directions_car, (context, menuData) {
+        carsProvider.setSelectedServerPeugeot();
         Scaffold.of(context).showSnackBar(
             new SnackBar(content: new Text('Peugeot Server Selected!')));
       },labelText: 'Peugeot'),
       new MenuData(Icons.directions_car, (context, menuData) {
-        CarsModel.setSelectedServerMG();
+        carsProvider.setSelectedServerMG();
         Scaffold.of(context).showSnackBar(
             new SnackBar(content: new Text('MG Server Selected!')));
       },labelText: 'MG')
@@ -46,8 +49,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override 
   Widget build(BuildContext context) {
-
-    
 
     void _showLoginFailed(context2) {
 
@@ -70,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
     // TODO: implement build
-    return Scaffold(
+    return  Scaffold(
             floatingActionButton: new FabMenu(
                           menus: menuDataList,
                           maskColor: Colors.black,

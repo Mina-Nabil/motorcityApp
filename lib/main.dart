@@ -1,27 +1,34 @@
-
-import 'package:motorcity/login.dart';
+import 'package:motorcity/screens/login.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:motorcity/cars_model.dart';
-import './Home.dart';
+import 'package:motorcity/providers/cars_model.dart';
+import 'package:motorcity/screens/home.dart';
 import 'package:flutter_keychain/flutter_keychain.dart';
 
 checkIfAuthenticated() async {
-     var userID = await FlutterKeychain.get(key: "userID");
-    if(userID != null) {
-      CarsModel.setUserID(userID);
-      return true;
-    }  
-    else 
-      return false;
+  var userID = await FlutterKeychain.get(key: "userID");
+  if (userID != null) {
+    CarsModel.setUserID(userID);
+    return true;
+  } else
+    return false;
 }
 
-void main() {
-  runApp(ChangeNotifierProvider(
-    builder: (context) => CarsModel(),
-    child: MotorCityApp()
-    )
-  );
+Future<void> main() async {
+  checkIfAuthenticated().then((success) {
+    if (success) {
+      runApp(ChangeNotifierProvider(
+          builder: (context) => CarsModel(), child: MotorCityApp()));
+    } else {
+      runApp(ChangeNotifierProvider(
+        builder: (context) => CarsModel(),
+        child: MaterialApp(home: LoginPage(), routes: {
+          '/login': (context) => LoginPage(),
+          '/home': (context) => HomePage()
+        }),
+      ));
+    }
+  });
 }
 
 class MotorCityApp extends StatefulWidget {
@@ -29,21 +36,18 @@ class MotorCityApp extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _MotorCityAppState();
   }
-
 }
 
 class _MotorCityAppState extends State<MotorCityApp> {
-
   Widget build(BuildContext context) {
-
-    return MaterialApp(
-        initialRoute: '/',
-        routes: {
-          '/': (context) => LandingPage(),
-          '/login': (context) => LoginPage(),
-          '/home': (context) => HomePage()
-        }
-    ); 
+    return MaterialApp(initialRoute: '/', 
+    
+      theme: ThemeData(fontFamily: 'NotoSerif'),
+    routes: {
+      '/': (context) => LandingPage(),
+      '/login': (context) => LoginPage(),
+      '/home': (context) => HomePage()
+    });
   }
 }
 
@@ -59,12 +63,9 @@ class LandingPage extends StatelessWidget {
     });
 
     return Container(
-      color: Colors.white,
-      child: Center(
-      child: CircularProgressIndicator(),
-      )
-    );
+        color: Colors.white,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ));
   }
 }
-
-

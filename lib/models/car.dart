@@ -1,5 +1,3 @@
-import 'package:motorcity/location.dart';
-
 class Car {
 
   final String chassis;
