@@ -14,12 +14,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-
   static Future<Null> _refreshPage(context) async {
-    await Provider.of<CarsModel>(context).loadCars(force: true);
-    await Provider.of<CarsModel>(context).loadTruckRequests(force: true);
-    await Provider.of<CarsModel>(context).loadInventory(force: true);
+    try {
+      await Provider.of<CarsModel>(context).loadCars(force: true);
+      //await Provider.of<CarsModel>(context).loadTruckRequests(force: true);
+      //await Provider.of<CarsModel>(context).loadInventory(force: true);
+    } catch (e) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+          duration: Duration(milliseconds: 1000), content: Text(e.toString())));
+    }
     return;
   }
 

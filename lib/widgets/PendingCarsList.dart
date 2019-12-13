@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:motorcity/providers/cars_model.dart';
 import 'package:provider/provider.dart';
 import 'package:motorcity/widgets/caritem.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class PendingCarsList extends StatefulWidget {
   @override
@@ -11,16 +12,54 @@ class PendingCarsList extends StatefulWidget {
 class _PendingCarsListState extends State<PendingCarsList> {
   bool _isLoading = true;
 
+  void showServerFailedDialog(context) {
+    Alert(
+      context: context,
+      type: AlertType.error,
+      title: "Error",
+      desc: "Server connection failed.",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "OK",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+        )
+      ],
+    ).show();
+  }
+
   Future<Null> _refreshCars(context) async {
-    Provider.of<CarsModel>(context).loadCars(force: true);
+    try {
+      await Provider.of<CarsModel>(context).loadCars(force: true);
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      showServerFailedDialog(context);
+      Scaffold.of(context).showSnackBar(new SnackBar(
+          duration: Duration(milliseconds: 500),
+          content: new Text(e.toString())));
+    }
     return;
   }
 
   @override
   void initState() {
+    final scaffo = Scaffold.of(context);
     Future.delayed(Duration.zero).then((_) async {
-      await Provider.of<CarsModel>(context).loadCars();
-      _isLoading = false;
+      try {
+        await Provider.of<CarsModel>(context).loadCars(ignoreEmpty: true);
+        _isLoading = false;
+      } catch (e) {
+        _isLoading = false;
+        showServerFailedDialog(context);
+        scaffo.showSnackBar(SnackBar(
+          duration: Duration(milliseconds: 2000),
+          content: Text(e.toString()),
+        ));
+      }
     });
     super.initState();
   }

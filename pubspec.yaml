@@ -37,6 +37,8 @@ dependencies:
 
   fab_menu: ^0.0.2
 
+  rflutter_alert: ^1.0.3
+
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +72,9 @@ flutter:
     - assets/Motorcity_Logo.png
     - assets/in-progress.png
     - assets/new.png
+    - assets/cancel.png
+    - assets/checked.png
+    - assets/question.png
 
   fonts:
   - family: NotoSerif

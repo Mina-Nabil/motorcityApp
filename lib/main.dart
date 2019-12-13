@@ -41,7 +41,7 @@ class MotorCityApp extends StatefulWidget {
 class _MotorCityAppState extends State<MotorCityApp> {
   Widget build(BuildContext context) {
     return MaterialApp(initialRoute: '/', 
-    
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'NotoSerif'),
     routes: {
       '/': (context) => LandingPage(),
