@@ -34,6 +34,7 @@ class _PendingCarsListState extends State<PendingCarsList> {
   Future<Null> _refreshCars(context) async {
     try {
       await Provider.of<CarsModel>(context).loadCars(force: true);
+
       _isLoading = false;
     } catch (e) {
       _isLoading = false;

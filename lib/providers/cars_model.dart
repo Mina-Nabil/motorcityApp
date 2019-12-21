@@ -32,6 +32,10 @@ class CarsModel with ChangeNotifier {
   final String _completeTruckRequestURL = "request/complete";
   final String _cancelTruckRequestURL = "request/cancel";
 
+  Map<String, String> _requestHeaders = {
+       'Accept': 'application/json',
+     };
+
   List<Car> _pendingCars = [];
   List<Car> _inventoryCars = [];
   List<Location> _locations = [];
@@ -69,12 +73,21 @@ class CarsModel with ChangeNotifier {
 
     try {
       if (selectedURL == null) await initServers();
+      if(_requestHeaders['token']==null || _requestHeaders['userType']==null) await initHeaders();
       _pendingCars = [];
       notifyListeners();
       String apiURL = selectedURL + _pendingURL;
-      final response = await http.get(apiURL).timeout(Duration(seconds: 4));
+      final response = await http.get(apiURL, headers: _requestHeaders).timeout(Duration(seconds: 4));
       if (response.statusCode == 200) {
-        Iterable l = json.decode(cleanResponse(response.body));
+
+        final dynamic decodedJson = json.decode(cleanResponse(response.body));
+
+        if(decodedJson is Map<String,dynamic> && decodedJson.containsKey("headers") && decodedJson['headers'] == false){
+          this.logout();
+          return;
+        }
+
+        Iterable l = decodedJson;
 
         l.where((car) {
           return (car['Car']['INVT_ID'] != null);
@@ -91,7 +104,8 @@ class CarsModel with ChangeNotifier {
     } catch (e) {
       print("Exception catched: " + e.toString());
       throw HttpException('Can\'t connect to the server!');
-    }
+    } 
+      return;
   }
 
   Future<void> loadInventory({bool force = false}) async {
@@ -102,11 +116,21 @@ class CarsModel with ChangeNotifier {
 
     try {
       if (selectedURL == null) await initServers();
+      if(_requestHeaders['token']==null || _requestHeaders['userType']==null) await initHeaders();
       _inventoryCars = [];
       String apiURL = selectedURL + _inventoryURL;
-      final response = await http.get(apiURL).timeout(Duration(seconds: 4));
+      final response = await http.get(apiURL, headers: _requestHeaders).timeout(Duration(seconds: 4));
       if (response.statusCode == 200) {
-        Iterable l = json.decode(cleanResponse(response.body));
+
+        final dynamic decodedJson = json.decode(cleanResponse(response.body));
+
+        //Check if User is Authorized
+        if(decodedJson is Map<String,dynamic> && decodedJson.containsKey("headers") && decodedJson['headers'] == false){
+          this.logout();
+          return;
+        }
+
+        Iterable l = decodedJson;
 
         this._inventoryCars = l.map((carJson) {
           Car car = Car.fromJson(carJson);
@@ -129,13 +153,23 @@ class CarsModel with ChangeNotifier {
 
     try {
       if (selectedURL == null) await initServers();
+      if(_requestHeaders['token']==null || _requestHeaders['userType']==null) await initHeaders();
       _locations = [];
 
       String apiURL = selectedURL + _locationURL;
 
-      final response = await http.get(apiURL).timeout(Duration(seconds: 4));
+      final response = await http.get(apiURL, headers: _requestHeaders).timeout(Duration(seconds: 4));
       if (response.statusCode == 200) {
-        Iterable l = json.decode(cleanResponse(response.body));
+
+        final dynamic decodedJson = json.decode(cleanResponse(response.body));
+
+        //Check if User is Authorized
+        if(decodedJson is Map<String,dynamic> && decodedJson.containsKey("headers") && decodedJson['headers'] == false){
+          this.logout();
+          return false;
+        }
+
+        Iterable l = decodedJson;
 
         this._locations = l.map((locJson) {
           Location loc = Location(
@@ -154,19 +188,29 @@ class CarsModel with ChangeNotifier {
   Future<void> loadTruckRequests({bool force = false}) async {
     if (_requests.length > 0 && !force) {
       notifyListeners();
-      return;
+      return true;
     }
 
     try {
       if (selectedURL == null) await initServers();
+      if(_requestHeaders['token']==null || _requestHeaders['userType']==null) await initHeaders();
       _requests = [];
       notifyListeners();
       String apiURL = mgServer + _requestsURL;
-      final response = await http.post(apiURL, body: {
+      final response = await http.post(apiURL, headers: _requestHeaders, body: {
         "DriverID": userID
       }).timeout(Duration(seconds: 4));
       if (response.statusCode == 200) {
-        Iterable l = json.decode(cleanResponse(response.body));
+
+        final dynamic decodedJson = json.decode(cleanResponse(response.body));
+
+        //Check if User is Authorized
+        if(decodedJson is Map<String,dynamic> && decodedJson.containsKey("headers") && decodedJson['headers'] == false){
+          this.logout();
+          return false;
+        }
+
+        Iterable l = decodedJson;
 
         this._requests = l.map((requestaya) {
           return TruckRequest(
@@ -188,6 +232,7 @@ class CarsModel with ChangeNotifier {
       print("Exception catched: " + e.toString());
       throw HttpException('Can\'t connect to the server!');
     }
+    return true;
   }
 
   Future<bool> login({String user, String password}) async {
@@ -195,10 +240,17 @@ class CarsModel with ChangeNotifier {
       final response = await http.post(selectedURL + _loginURL,
           body: {"DRVRName": user, "DRVRPass": password});
       if (response.statusCode == 200) {
-        var id = jsonDecode(response.body)['DRVR_ID'];
+        final loginBody = jsonDecode(response.body);
+        var id = loginBody['id'];
+        var token = loginBody['token'];
         if (id != null) {
           await FlutterKeychain.put(key: "userID", value: id);
           await FlutterKeychain.put(key: "userName", value: user);
+          await FlutterKeychain.put(key: "token", value: token);
+          await FlutterKeychain.put(key: "userType", value: "driver");
+
+          initHeaders();
+
           final prefs = await SharedPreferences.getInstance();
           prefs.setString(_selectedKey, selectedURL);
           userID = id;
@@ -222,7 +274,7 @@ class CarsModel with ChangeNotifier {
       String drvrID = await FlutterKeychain.get(key: "userID");
       final bodyArr = {"DriverID": drvrID, "RequestID": reqId};
       final response = await http
-          .post(mgServer + _acceptTruckRequestURL, body: bodyArr)
+          .post(mgServer + _acceptTruckRequestURL, headers: _requestHeaders, body: bodyArr)
           .timeout(Duration(seconds: 5));
 
       if (response.statusCode == 200) {
@@ -243,7 +295,7 @@ class CarsModel with ChangeNotifier {
       String drvrID = await FlutterKeychain.get(key: "userID");
       final bodyArr = {"DriverID": drvrID, "RequestID": reqId};
       final response = await http
-          .post(mgServer + _completeTruckRequestURL, body: bodyArr)
+          .post(mgServer + _completeTruckRequestURL, headers: _requestHeaders, body: bodyArr)
           .timeout(Duration(seconds: 5));
 
       if (response.statusCode == 200) {
@@ -262,7 +314,7 @@ class CarsModel with ChangeNotifier {
       String drvrID = await FlutterKeychain.get(key: "userID");
       final bodyArr = {"DriverID": drvrID, "RequestID": reqId};
       final response = await http
-          .post(mgServer + _cancelTruckRequestURL, body: bodyArr)
+          .post(mgServer + _cancelTruckRequestURL, headers: _requestHeaders, body: bodyArr)
           .timeout(Duration(seconds: 5));
 
       if (response.statusCode == 200) {
@@ -288,16 +340,30 @@ class CarsModel with ChangeNotifier {
       peugeotServer = "http://" + peugeotServerIP + "/motorcity/api/";
 
       selectedURL = prefs.getString(_selectedKey) ?? peugeotServer;
+
     }
   }
 
+  Future<void> initHeaders() async {
+      this._requestHeaders.addAll( {"token": await FlutterKeychain.get(key: "token")} );
+      this._requestHeaders.addAll( {"userType": await FlutterKeychain.get(key: "userType")} );
+  }
+
   void setServersIP(peugeotIP, mgIP) async {
+    int selectedIP = 0; //1 => peageut & 2 => mg
+
+    if(selectedURL == mgServer) selectedIP = 2;
+    if(selectedURL == peugeotServer) selectedIP = 1;
+
     mgServerIP = mgIP;
     peugeotServerIP = peugeotIP;
     final prefs = await SharedPreferences.getInstance();
 
     mgServer = "http://" + mgServerIP + "/motorcity/api/";
     peugeotServer = "http://" + peugeotServerIP + "/motorcity/api/";
+
+    if(selectedIP==1)selectedURL=peugeotServer;
+    else if(selectedIP==2)selectedURL=mgServer;
 
     prefs.setString(_mgKey, mgIP);
     prefs.setString(_pgKey, peugeotIP);

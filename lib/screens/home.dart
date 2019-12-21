@@ -17,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   static Future<Null> _refreshPage(context) async {
     try {
       await Provider.of<CarsModel>(context).loadCars(force: true);
+
       //await Provider.of<CarsModel>(context).loadTruckRequests(force: true);
       //await Provider.of<CarsModel>(context).loadInventory(force: true);
     } catch (e) {
