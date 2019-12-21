@@ -15,13 +15,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String username ;
-  static dynamic carsProvider;
   String password ;
 
    List<MenuData> menuDataList;
 
     void initState(){
-      carsProvider = Provider.of<CarsModel>(context, listen: false);
     super.initState();
     menuDataList = [
       new MenuData(Icons.settings, (context, menuData) {
@@ -35,12 +33,12 @@ class _LoginPageState extends State<LoginPage> {
       },labelText: 'Settings'),
       new MenuData(
         Icons.directions_car, (context, menuData) {
-        carsProvider.setSelectedServerPeugeot();
+        Provider.of<CarsModel>(context).setSelectedServerPeugeot();
         Scaffold.of(context).showSnackBar(
             new SnackBar(content: new Text('Peugeot Server Selected!')));
       },labelText: 'Peugeot'),
       new MenuData(Icons.directions_car, (context, menuData) {
-        carsProvider.setSelectedServerMG();
+        Provider.of<CarsModel>(context).setSelectedServerMG();
         Scaffold.of(context).showSnackBar(
             new SnackBar(content: new Text('MG Server Selected!')));
       },labelText: 'MG')

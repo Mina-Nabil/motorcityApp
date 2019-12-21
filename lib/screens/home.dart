@@ -33,14 +33,18 @@ class _HomePageState extends State<HomePage> {
   List<MenuData> menuDataList;
   PageController _controller = PageController(initialPage: 0);
 
-  checkIfAuthenticated() async {
-    var userID = await FlutterKeychain.get(key: "userID");
+  Future<bool> checkIfAuthenticated(context) async {
+    try {
+      var userID = await FlutterKeychain.get(key: "userID");
 
-    if (userID != null) {
-      CarsModel.setUserID(userID);
-      return true;
-    } else
+      if (userID != null) {
+        Provider.of<CarsModel>(context).setUserID(userID);
+        return true;
+      } else
+        return false;
+    } catch (e) {
       return false;
+    }
   }
 
   void selectPage(int index) {
@@ -68,21 +72,21 @@ class _HomePageState extends State<HomePage> {
         ));
       }, labelText: 'Settings'),
       new MenuData(Icons.directions_car, (context, menuData) async {
-        CarsModel.setSelectedServerPeugeot();
+        Provider.of<CarsModel>(context).setSelectedServerPeugeot();
         _refreshPage(context);
         Scaffold.of(context).showSnackBar(new SnackBar(
             duration: Duration(milliseconds: 500),
             content: new Text('Peugeot Server Selected!')));
       }, labelText: 'Peugeot'),
       new MenuData(Icons.directions_car, (context, menuData) async {
-        CarsModel.setSelectedServerMG();
+        Provider.of<CarsModel>(context).setSelectedServerMG();
         _refreshPage(context);
         Scaffold.of(context).showSnackBar(new SnackBar(
             duration: Duration(milliseconds: 500),
             content: new Text('MG Server Selected!')));
       }, labelText: 'MG'),
       new MenuData(Icons.lock_outline, (context, menuData) {
-        CarsModel.logout();
+        Provider.of<CarsModel>(context).logout();
         Navigator.pushReplacementNamed(context, '/login');
       }, labelText: 'logout')
     ];
@@ -90,11 +94,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    checkIfAuthenticated().then((success) {
-      if (!success) {
-        Navigator.pushReplacementNamed(context, '/login');
-      }
-    });
 
     return Scaffold(
       floatingActionButton: new FabMenu(

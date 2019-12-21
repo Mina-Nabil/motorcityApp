@@ -75,6 +75,8 @@ flutter:
     - assets/cancel.png
     - assets/checked.png
     - assets/question.png
+    - assets/noRequests.png
+    - assets/noCars.png
 
   fonts:
   - family: NotoSerif

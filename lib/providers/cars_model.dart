@@ -28,14 +28,20 @@ class CarsModel with ChangeNotifier {
   final String _locationURL = 'locations';
   final String _requestsURL = 'requests';
   final String _loginURL = 'driverLogin';
-  final String _acceptTruckRequestURL = "accept/request";
-  final String _completeTruckRequestURL = "accept/complete";
-  final String _cancelTruckRequestURL = "accept/cancel";
+  final String _acceptTruckRequestURL = "request/accept";
+  final String _completeTruckRequestURL = "request/complete";
+  final String _cancelTruckRequestURL = "request/cancel";
 
   List<Car> _pendingCars = [];
   List<Car> _inventoryCars = [];
   List<Location> _locations = [];
   List<TruckRequest> _requests = [];
+
+  bool _isAuthenticated = false;
+
+  bool get isAuthenticated {
+    return _isAuthenticated;
+  }
 
   List<Car> get pendingCars {
     return [..._pendingCars];
@@ -156,7 +162,9 @@ class CarsModel with ChangeNotifier {
       _requests = [];
       notifyListeners();
       String apiURL = mgServer + _requestsURL;
-      final response = await http.get(apiURL).timeout(Duration(seconds: 4));
+      final response = await http.post(apiURL, body: {
+        "DriverID": userID
+      }).timeout(Duration(seconds: 4));
       if (response.statusCode == 200) {
         Iterable l = json.decode(cleanResponse(response.body));
 
@@ -194,6 +202,7 @@ class CarsModel with ChangeNotifier {
           final prefs = await SharedPreferences.getInstance();
           prefs.setString(_selectedKey, selectedURL);
           userID = id;
+          _isAuthenticated = true;
           return true;
         } else
           return false;
@@ -211,16 +220,19 @@ class CarsModel with ChangeNotifier {
   Future<bool> acceptTruckRequest(reqId) async {
     try {
       String drvrID = await FlutterKeychain.get(key: "userID");
-      final bodyArr = {"DRVRid": drvrID, "TKRQid": reqId};
+      final bodyArr = {"DriverID": drvrID, "RequestID": reqId};
       final response = await http
           .post(mgServer + _acceptTruckRequestURL, body: bodyArr)
           .timeout(Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         final serverResponse = json.decode(cleanResponse(response.body));
-        if(serverResponse == "approved") return true;
-        else return false;
+        if(serverResponse['response'] == true) 
+          return true;
+        else 
+          return false;
       }
+      else return false;
     } catch (e) {
       throw HttpException("Can't connect to server");
     }
@@ -229,16 +241,17 @@ class CarsModel with ChangeNotifier {
   Future<bool> completeTruckRequest(reqId) async {
     try {
       String drvrID = await FlutterKeychain.get(key: "userID");
-      final bodyArr = {"DRVRid": drvrID, "TKRQid": reqId};
+      final bodyArr = {"DriverID": drvrID, "RequestID": reqId};
       final response = await http
           .post(mgServer + _completeTruckRequestURL, body: bodyArr)
           .timeout(Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         final serverResponse = json.decode(cleanResponse(response.body));
-        if(serverResponse == "approved") return true;
+        if(serverResponse['response'] == true) return true;
         else return false;
       }
+      else return false;
     } catch (e) {
       throw HttpException("Can't connect to server");
     }
@@ -247,23 +260,24 @@ class CarsModel with ChangeNotifier {
   Future<bool> cancelTruckRequest(reqId) async {
     try {
       String drvrID = await FlutterKeychain.get(key: "userID");
-      final bodyArr = {"DRVRid": drvrID, "TKRQid": reqId};
+      final bodyArr = {"DriverID": drvrID, "RequestID": reqId};
       final response = await http
           .post(mgServer + _cancelTruckRequestURL, body: bodyArr)
           .timeout(Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         final serverResponse = json.decode(cleanResponse(response.body));
-        if(serverResponse == "approved") return true;
+        if(serverResponse['response'] == true) return true;
         else return false;
       }
+      else return false;
     } catch (e) {
       throw HttpException("Can't connect to server");
     }
   }
 
 /////////////////////////Model Management Functions/////////////////////////////
-  static Future<void> initServers() async {
+  Future<void> initServers() async {
     if (selectedURL == null) {
       final prefs = await SharedPreferences.getInstance();
 
@@ -277,7 +291,7 @@ class CarsModel with ChangeNotifier {
     }
   }
 
-  static void setServersIP(peugeotIP, mgIP) async {
+  void setServersIP(peugeotIP, mgIP) async {
     mgServerIP = mgIP;
     peugeotServerIP = peugeotIP;
     final prefs = await SharedPreferences.getInstance();
@@ -289,23 +303,49 @@ class CarsModel with ChangeNotifier {
     prefs.setString(_pgKey, peugeotIP);
   }
 
-  static void setSelectedServerMG({bool refreshCars = false}) async {
+  void setSelectedServerMG({bool refreshCars = false}) async {
     selectedURL = mgServer;
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(_selectedKey, selectedURL);
+
+    _resetAllData();
   }
 
-  static void setSelectedServerPeugeot({bool refreshCars = false}) async {
+  void setSelectedServerPeugeot({bool refreshCars = false}) async {
     selectedURL = peugeotServer;
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(_selectedKey, selectedURL);
+
+    _resetAllData();
   }
 
-  static void setUserID(String id) {
+  Future<void> _resetAllData() async {
+    await loadInventory();
+    await loadLocations();
+    await loadCars();
+  }
+
+  void setUserID(String id) {
+    _isAuthenticated = true;
     userID = id;
   }
 
-  static void logout() async {
+  Future<bool> checkIfAuthenticated() async {
+  try {
+    var userID = await FlutterKeychain.get(key: "userID");
+    if (userID != null) {
+      this.setUserID(userID);
+      _isAuthenticated = true;
+      return true;
+    } else
+      return false;
+  } catch (e) {
+    return false;
+  }
+}
+
+  void logout() async {
+    _isAuthenticated = false;
     FlutterKeychain.clear();
   }
 

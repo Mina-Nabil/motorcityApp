@@ -76,10 +76,38 @@ class _PendingCarsListState extends State<PendingCarsList> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[CircularProgressIndicator()],
                 )
-              : ListView(
-                  children: carsData.pendingCars.map((car) {
-                  return CarItem(car);
-                }).toList())),
+              : (carsData.pendingCars.length != 0)
+                  ? ListView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      children: carsData.pendingCars.map((car) {
+                        return CarItem(car);
+                      }).toList())
+                  : SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height-80,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Flexible(
+                              flex: 8,
+                              child: Opacity(
+                                opacity: 0.2,
+                                child: Image.asset("assets/noCars.png"),
+                              ),
+                            ),
+                            Flexible(
+                                flex: 3,
+                                child: Container(
+                                  alignment: Alignment.topCenter,
+                                  child: Opacity(
+                                      opacity: 0.4,
+                                      child: Text("...no cars...")),
+                                ))
+                          ],
+                        ),
+                      ),
+                    )),
       onRefresh: () => _refreshCars(context),
     );
   }

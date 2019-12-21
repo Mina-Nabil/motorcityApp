@@ -47,8 +47,8 @@ class RequestDialog {
   Future<void> acceptRequest(context) async {
     Navigator.pop(context);
     try {
-      await Provider.of<CarsModel>(context).acceptTruckRequest(_reqId);
-      _showConfirmed();
+      bool res = await Provider.of<CarsModel>(context).acceptTruckRequest(_reqId);
+      (res) ? _showConfirmed() : _showFailed();
     } catch (e) {
       _showFailed();
       return false;

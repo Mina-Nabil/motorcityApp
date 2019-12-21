@@ -11,7 +11,7 @@ class InProgressDialog {
   InProgressDialog(this.context, this._reqId);
 
   final askAlertStyle = AlertStyle(
-    animationType: AnimationType.shrink,
+    animationType: AnimationType.fromTop,
     isCloseButton: false,
     isOverlayTapDismiss: true,
     descStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -44,22 +44,66 @@ class InProgressDialog {
     ),
   );
 
+  final cancelAlertStyle = AlertStyle(
+    animationType: AnimationType.fromTop,
+    isCloseButton: false,
+    isOverlayTapDismiss: true,
+    descStyle: TextStyle(fontWeight: FontWeight.bold),
+    animationDuration: Duration(milliseconds: 400),
+    alertBorder: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20.0),
+      side: BorderSide(
+        color: Colors.grey,
+      ),
+    ),
+    titleStyle: TextStyle(
+      color: Colors.black,
+    ),
+  );
+
   Future<void> completeRequest(context) async {
     Navigator.pop(context);
     try {
-      await Provider.of<CarsModel>(context).completeTruckRequest(_reqId);
-      _showConfirmed();
+      bool res = await Provider.of<CarsModel>(context).completeTruckRequest(_reqId);
+      (res) ? _showConfirmed() : _showFailed();
     } catch (e) {
       _showFailed();
       return false;
     }
   }
 
+  void showCancelConfirm(context){
+    Navigator.pop(context);
+    Alert(
+        context: context,
+        style: cancelAlertStyle,
+        image: Image.asset("assets/cancel.png"),
+        title: "Are you sure you want to cancel?",
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Confirm",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => cancelRequest(context),
+            color: Colors.red[300],
+          ),
+          DialogButton(
+            child: Text(
+              "Cancel",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+            color: Colors.cyan[300],
+          )
+        ]).show();
+  }
+
   Future<void> cancelRequest(context) async {
     Navigator.pop(context);
     try {
-      await Provider.of<CarsModel>(context).cancelTruckRequest(_reqId);
-      _showConfirmed();
+      bool res = await Provider.of<CarsModel>(context).cancelTruckRequest(_reqId);
+      (res) ? _showConfirmed() : _showFailed();
     } catch (e) {
       _showFailed();
       return false;
@@ -79,20 +123,21 @@ class InProgressDialog {
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             onPressed: () => completeRequest(context),
-            color: Colors.cyan[150],
+            color: Colors.green[300],
           ),
           DialogButton(
             child: Text(
               "Cancel",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            onPressed: () => cancelRequest(context),
-            color: Colors.red[150],
+            onPressed: () => showCancelConfirm(context),
+            color: Colors.red[300],
           )
         ]).show();
   }
 
   void _showConfirmed() {
+    Provider.of<CarsModel>(context).loadTruckRequests(force: true);
     Alert(
         context: context,
         style: minorAlertStyle,

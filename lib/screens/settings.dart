@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
 import 'package:motorcity/providers/cars_model.dart';
+import 'package:provider/provider.dart';
 
 
 
@@ -35,7 +36,7 @@ class SettingsPage extends StatelessWidget {
                 padding: EdgeInsets.only(bottom:20),
                 child: TextField(
                   controller: _peog,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.text,
                   autofocus: true,
                   textAlign: TextAlign.left, 
                 ),
@@ -54,7 +55,7 @@ class SettingsPage extends StatelessWidget {
                 padding: EdgeInsets.only(top: 10, bottom: 10),
                 child: TextField(
                   controller: _mg,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.text,
                   textAlign: TextAlign.left,
                   onSubmitted: null,
                 ),
@@ -72,7 +73,7 @@ class SettingsPage extends StatelessWidget {
                     ),
                   ),
                   onPressed: ()  {
-                    CarsModel.setServersIP(_peog.text, _mg.text) ;
+                    Provider.of<CarsModel>(context).setServersIP(_peog.text, _mg.text) ;
                     Navigator.pop(context2);
                   }
                 ),

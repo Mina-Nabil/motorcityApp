@@ -27,20 +27,40 @@ class _TrucksPageState extends State<TrucksPage> {
 
   @override
   Widget build(BuildContext context) {
+    FocusScope.of(context).requestFocus(FocusNode());
     return RefreshIndicator(
         onRefresh: () => _refreshPage(context),
         child: (_isLoading)
             ? Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children : [CircularProgressIndicator()
-              ])
-            : Container(
-                child: ListView(
-                    children: Provider.of<CarsModel>(context)
-                        .requests
-                        .map((requestaya) {
-                return RequestItem(requestaya);
-              }).toList())));
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [CircularProgressIndicator()])
+            : (Provider.of<CarsModel>(context).requests.length != 0)
+                ? Container(
+                    child: ListView(
+                        children: Provider.of<CarsModel>(context)
+                            .requests
+                            .map((requestaya) {
+                    return RequestItem(requestaya);
+                  }).toList()))
+                : SingleChildScrollView(
+                    child: Container(
+                    height: MediaQuery.of(context).size.height-80,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Flexible(
+                          flex : 8,
+                          child: Opacity(
+                            opacity: 0.2,
+                              child: Image.asset("assets/noRequests.png"),
+                            ),
+                        ),
+                        Flexible(flex: 3,
+                        child: Container(alignment: Alignment.topCenter,child: Opacity(opacity: 0.4, child: Text("...no requests...")),))
+                      ],
+                    ),
+                  ),
+                ));
   }
 }
