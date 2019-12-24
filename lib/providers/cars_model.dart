@@ -345,8 +345,11 @@ class CarsModel with ChangeNotifier {
   }
 
   Future<void> initHeaders() async {
-      this._requestHeaders.addAll( {"token": await FlutterKeychain.get(key: "token")} );
-      this._requestHeaders.addAll( {"userType": await FlutterKeychain.get(key: "userType")} );
+      this._requestHeaders.addAll( {
+        "token": await FlutterKeychain.get(key: "token"), 
+        "userType": await FlutterKeychain.get(key: "userType")
+        });
+
   }
 
   void setServersIP(peugeotIP, mgIP) async {
