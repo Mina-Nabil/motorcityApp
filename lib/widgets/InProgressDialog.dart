@@ -137,7 +137,7 @@ class InProgressDialog {
   }
 
   void _showConfirmed() {
-    Provider.of<CarsModel>(context).loadTruckRequests(force: true);
+    
     Alert(
         context: context,
         style: minorAlertStyle,
