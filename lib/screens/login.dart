@@ -68,6 +68,79 @@ class _LoginPageState extends State<LoginPage> {
       
   }
 
+  var newLogin = Builder(
+        builder: (context) => Container(
+            color: Color.fromRGBO(0,46,72,0.5),
+            child: Center(
+              child: ListView(
+                shrinkWrap: true,
+                padding: EdgeInsets.only(left: 24.0, right: 24.0),
+                children: <Widget>[
+                  Hero(
+                    tag: 'hero',
+                    child: CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      radius: 48.0,
+                      child: Image.asset('assets/Motorcity-Logo-wht-blue2.png'),
+                    ),
+                  ),
+                  SizedBox(height: 48.0),
+                  TextFormField(
+                    controller: LoginPage._user,
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    autofocus: false,
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(color: Colors.white54),
+                      hoverColor: Colors.blue,
+                      hintText: 'Username',
+                      contentPadding:
+                          EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32.0),
+                          borderSide: BorderSide(color: Colors.white)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32.0),
+                          borderSide: BorderSide(color: Colors.white)),
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  TextFormField(
+                    controller: LoginPage._pass,
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    autofocus: false,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      hintText: 'Password',
+                      hintStyle: TextStyle(color: Colors.white54),
+                      hoverColor: Colors.blue,
+                      contentPadding:
+                          EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32.0),
+                          borderSide: BorderSide(color: Colors.white)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32.0),
+                          borderSide: BorderSide(color: Colors.white)),
+                    ),
+                  ),
+                  SizedBox(height: 24.0),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      onPressed: () => checkUser(context),
+                      padding: EdgeInsets.all(12),
+                      color: Color.fromRGBO(0,46,72,1),
+                      child:
+                          Text('Log In', style: TextStyle(fontSize: 18,color: Colors.white)),
+                    ),
+                  )
+                ],
+              ),
+            )));
+
     // TODO: implement build
     return  Scaffold(
             floatingActionButton: new FabMenu(
@@ -75,52 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                           maskColor: Colors.black,
                         ),
             floatingActionButtonLocation: fabMenuLocation,
-            body: Container(
-              padding: EdgeInsets.only(right: 80, left: 80),
-              color: Colors.white,
-              child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-
-              Image.asset('assets/Motorcity_Logo.png'),
-
-              TextField(
-                controller: LoginPage._user,
-                autofocus: true,
-                textAlign: TextAlign.center, 
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-
-              Container(
-                padding: EdgeInsets.only(top: 10, bottom: 20),
-                child: TextField(
-                  controller: LoginPage._pass,
-                  textAlign: TextAlign.center,
-                  obscureText: true,
-                  onSubmitted: null,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-              ),
-
-               Container(
-                 
-                width: double.infinity,
-                child: Builder(
-                  builder: (context2) => RaisedButton(
-                  color: Colors.blue,
-                  child: Text("Login",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    ),
-                  ),
-                  onPressed: () => checkUser(context2),
-                ),
-              )
-             )
-            ],
-          )
-        )
+            body: newLogin
       );
     
   }

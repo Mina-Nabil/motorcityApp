@@ -49,11 +49,11 @@ class CarItem extends StatelessWidget {
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,
-                                fontSize: 17),
+                                fontSize: 18),
                           ),
                           subtitle: Text(
                             car.model + '-' + car.color + '/' + car.colorCode,
-                            style: TextStyle(fontSize: 15),
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
                         Divider(),
@@ -64,7 +64,7 @@ class CarItem extends StatelessWidget {
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,
-                                fontSize: 17),
+                                fontSize: 18),
                           ),
                           subtitle: Text("Date: " + car.date,
                               style: TextStyle(fontSize: 16)),

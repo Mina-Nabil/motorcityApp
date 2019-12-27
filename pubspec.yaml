@@ -77,6 +77,8 @@ flutter:
     - assets/question.png
     - assets/noRequests.png
     - assets/noCars.png
+    - assets/Motorcity-Logo-wht-blue.png
+    - assets/Motorcity-Logo-wht-blue2.png
 
   fonts:
   - family: NotoSerif

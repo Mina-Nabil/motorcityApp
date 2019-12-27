@@ -19,12 +19,10 @@ Future<bool> checkIfAuthenticated(context) async {
 }
 
 Future<void> main() async {
-
   runApp(ChangeNotifierProvider(
     builder: (context) => CarsModel(),
     child: MotorCityApp(),
   ));
-
 }
 
 class MotorCityApp extends StatefulWidget {
@@ -39,13 +37,15 @@ class _MotorCityAppState extends State<MotorCityApp> {
     return MaterialApp(
         initialRoute: '/',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(fontFamily: 'NotoSerif'),
+        theme: ThemeData(
+            fontFamily: 'NotoSerif',
+            primaryColor: Color.fromRGBO(0, 46, 72, 1),
+            accentColor: Color.fromRGBO(0, 46, 72, 0.5)),
         routes: {
           '/login': (context) => LoginPage(),
           '/home': (context) => HomePage()
         },
-        home: LandingPage()
-    );
+        home: LandingPage());
   }
 }
 
