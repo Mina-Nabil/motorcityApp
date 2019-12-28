@@ -1,4 +1,7 @@
 import "package:flutter/material.dart";
+import 'package:flutter/services.dart';
+import 'package:location/location.dart';
+import 'package:location_permissions/location_permissions.dart';
 import 'package:motorcity/screens/trucks.dart';
 import 'package:motorcity/widgets/PendingCarsList.dart';
 import '../providers/cars_model.dart';
@@ -62,8 +65,67 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void track() {
+    print("opened");
+    var location = new Location();
+    location.changeSettings(
+        accuracy: LocationAccuracy.NAVIGATION,
+        interval: 1000,
+        distanceFilter: 0);
+    location.onLocationChanged().listen((LocationData currentLocation) {
+      print("change");
+      print("Lat : ${currentLocation.latitude}");
+      print("Lng : ${currentLocation.longitude}");
+    });
+  }
+
+  void trackUser() async {
+    print("STARTING LOCATION SERVICE");
+    var location = Location();
+    location.changeSettings(
+        accuracy: LocationAccuracy.NAVIGATION,
+        interval: 1000,
+        distanceFilter: 0);
+    // if (!await location.hasPermission()) {
+    //   await location.requestPermission();
+    // }
+  PermissionStatus permission =
+      await LocationPermissions().requestPermissions();
+
+      if(permission != PermissionStatus.granted)
+      {
+        ///error
+      }
+
+      ServiceStatus serviceStatus = await LocationPermissions().checkServiceStatus();
+      if(serviceStatus == ServiceStatus.disabled)
+      {
+        bool enableService = await location.requestService();
+        print(enableService);
+      }
+
+    try {
+        location.onLocationChanged().listen((LocationData currentLocation) {
+        print(currentLocation.latitude);
+        print(currentLocation.longitude);
+      });
+    } on PlatformException {
+      location = null;
+    }
+    // ServiceStatus serviceStatus =
+    //     await LocationPermissions().checkServiceStatus();
+    // print("$serviceStatus");
+
+    // if (serviceStatus == ServiceStatus.disabled) {
+    //   bool isOpened = await LocationPermissions().openAppSettings();
+    // }
+  }
+
+
+
   void initState() {
     super.initState();
+    trackUser();
     menuDataList = [
       new MenuData(Icons.settings, (context, menuData) {
         Navigator.of(context).push(MaterialPageRoute(
@@ -95,7 +157,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       floatingActionButton: new FabMenu(
         menus: menuDataList,

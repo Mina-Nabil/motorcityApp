@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:motorcity/providers/cars_model.dart';
 import 'package:motorcity/screens/home.dart';
 import 'package:flutter_keychain/flutter_keychain.dart';
+import 'package:location/location.dart';
+import 'package:location_permissions/location_permissions.dart';
 
 Future<bool> checkIfAuthenticated(context) async {
   try {
@@ -23,6 +25,8 @@ Future<void> main() async {
     builder: (context) => CarsModel(),
     child: MotorCityApp(),
   ));
+  // PermissionStatus permission =
+  //     await LocationPermissions().requestPermissions();
 }
 
 class MotorCityApp extends StatefulWidget {
