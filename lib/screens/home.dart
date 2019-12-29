@@ -1,4 +1,7 @@
+import 'package:firebase_database/firebase_database.dart';
 import "package:flutter/material.dart";
+import 'package:flutter/services.dart';
+import 'package:location/location.dart';
 import 'package:motorcity/screens/trucks.dart';
 import 'package:motorcity/widgets/PendingCarsList.dart';
 import '../providers/cars_model.dart';
@@ -34,20 +37,6 @@ class _HomePageState extends State<HomePage> {
   List<MenuData> menuDataList;
   PageController _controller = PageController(initialPage: 0);
 
-  Future<bool> checkIfAuthenticated(context) async {
-    try {
-      var userID = await FlutterKeychain.get(key: "userID");
-
-      if (userID != null) {
-        Provider.of<CarsModel>(context).setUserID(userID);
-        return true;
-      } else
-        return false;
-    } catch (e) {
-      return false;
-    }
-  }
-
   void selectPage(int index) {
     setState(() {
       _currentPage = index;
@@ -62,8 +51,67 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void trackUser() async {
+    print("STARTING LOCATION SERVICE");
+    var location = Location();
+    location.changeSettings(
+        accuracy: LocationAccuracy.NAVIGATION,
+        interval: 1000,
+        distanceFilter: 0);
+
+    // if (!await location.hasPermission()) {
+    //   await location.requestPermission();
+    // }
+
+    bool isLocationEnabled = await location.serviceEnabled();
+
+    if (!isLocationEnabled) {
+      bool enableService = await location.requestService();
+      print(enableService);
+    }
+    var userID = await FlutterKeychain.get(key: "userID");
+    print("ID : $userID");
+
+    FirebaseDatabase fbdb = FirebaseDatabase.instance;
+    DatabaseReference dbrLat = fbdb
+        .reference()
+        .child('locations')
+        .reference()
+        .child('$userID')
+        .reference()
+        .child('lat');
+
+    DatabaseReference dbrLng = fbdb
+        .reference()
+        .child('locations')
+        .reference()
+        .child('$userID')
+        .reference()
+        .child('lng');
+
+    try {
+      location.onLocationChanged().listen((LocationData currentLocation) {
+        dbrLat.set(currentLocation.latitude);
+        dbrLng.set(currentLocation.longitude);
+
+        print(currentLocation.latitude);
+        print(currentLocation.longitude);
+      });
+    } on PlatformException {
+      location = null;
+    }
+    // ServiceStatus serviceStatus =
+    //     await LocationPermissions().checkServiceStatus();
+    // print("$serviceStatus");
+
+    // if (serviceStatus == ServiceStatus.disabled) {
+    //   bool isOpened = await LocationPermissions().openAppSettings();
+    // }
+  }
+
   void initState() {
     super.initState();
+    trackUser();
     menuDataList = [
       new MenuData(Icons.settings, (context, menuData) {
         Navigator.of(context).push(MaterialPageRoute(
@@ -95,7 +143,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       floatingActionButton: new FabMenu(
         menus: menuDataList,
