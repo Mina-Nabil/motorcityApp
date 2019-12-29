@@ -1,7 +1,7 @@
+import 'package:firebase_database/firebase_database.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
-import 'package:location_permissions/location_permissions.dart';
 import 'package:motorcity/screens/trucks.dart';
 import 'package:motorcity/widgets/PendingCarsList.dart';
 import '../providers/cars_model.dart';
@@ -37,20 +37,6 @@ class _HomePageState extends State<HomePage> {
   List<MenuData> menuDataList;
   PageController _controller = PageController(initialPage: 0);
 
-  Future<bool> checkIfAuthenticated(context) async {
-    try {
-      var userID = await FlutterKeychain.get(key: "userID");
-
-      if (userID != null) {
-        Provider.of<CarsModel>(context).setUserID(userID);
-        return true;
-      } else
-        return false;
-    } catch (e) {
-      return false;
-    }
-  }
-
   void selectPage(int index) {
     setState(() {
       _currentPage = index;
@@ -65,20 +51,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void track() {
-    print("opened");
-    var location = new Location();
-    location.changeSettings(
-        accuracy: LocationAccuracy.NAVIGATION,
-        interval: 1000,
-        distanceFilter: 0);
-    location.onLocationChanged().listen((LocationData currentLocation) {
-      print("change");
-      print("Lat : ${currentLocation.latitude}");
-      print("Lng : ${currentLocation.longitude}");
-    });
-  }
-
   void trackUser() async {
     print("STARTING LOCATION SERVICE");
     var location = Location();
@@ -86,26 +58,42 @@ class _HomePageState extends State<HomePage> {
         accuracy: LocationAccuracy.NAVIGATION,
         interval: 1000,
         distanceFilter: 0);
+
     // if (!await location.hasPermission()) {
     //   await location.requestPermission();
     // }
-  PermissionStatus permission =
-      await LocationPermissions().requestPermissions();
 
-      if(permission != PermissionStatus.granted)
-      {
-        ///error
-      }
+    bool isLocationEnabled = await location.serviceEnabled();
 
-      ServiceStatus serviceStatus = await LocationPermissions().checkServiceStatus();
-      if(serviceStatus == ServiceStatus.disabled)
-      {
-        bool enableService = await location.requestService();
-        print(enableService);
-      }
+    if (!isLocationEnabled) {
+      bool enableService = await location.requestService();
+      print(enableService);
+    }
+    var userID = await FlutterKeychain.get(key: "userID");
+    print("ID : $userID");
+
+    FirebaseDatabase fbdb = FirebaseDatabase.instance;
+    DatabaseReference dbrLat = fbdb
+        .reference()
+        .child('locations')
+        .reference()
+        .child('$userID')
+        .reference()
+        .child('lat');
+
+    DatabaseReference dbrLng = fbdb
+        .reference()
+        .child('locations')
+        .reference()
+        .child('$userID')
+        .reference()
+        .child('lng');
 
     try {
-        location.onLocationChanged().listen((LocationData currentLocation) {
+      location.onLocationChanged().listen((LocationData currentLocation) {
+        dbrLat.set(currentLocation.latitude);
+        dbrLng.set(currentLocation.longitude);
+
         print(currentLocation.latitude);
         print(currentLocation.longitude);
       });
@@ -120,8 +108,6 @@ class _HomePageState extends State<HomePage> {
     //   bool isOpened = await LocationPermissions().openAppSettings();
     // }
   }
-
-
 
   void initState() {
     super.initState();
