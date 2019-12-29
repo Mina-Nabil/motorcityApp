@@ -52,7 +52,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void trackUser() async {
-    print("STARTING LOCATION SERVICE");
     var location = Location();
     location.changeSettings(
         accuracy: LocationAccuracy.NAVIGATION,
@@ -67,11 +66,9 @@ class _HomePageState extends State<HomePage> {
 
     if (!isLocationEnabled) {
       bool enableService = await location.requestService();
-      print(enableService);
     }
+    
     var userID = await FlutterKeychain.get(key: "userID");
-    print("ID : $userID");
-
     FirebaseDatabase fbdb = FirebaseDatabase.instance;
     DatabaseReference dbrLat = fbdb
         .reference()
@@ -93,9 +90,6 @@ class _HomePageState extends State<HomePage> {
       location.onLocationChanged().listen((LocationData currentLocation) {
         dbrLat.set(currentLocation.latitude);
         dbrLng.set(currentLocation.longitude);
-
-        print(currentLocation.latitude);
-        print(currentLocation.longitude);
       });
     } on PlatformException {
       location = null;
