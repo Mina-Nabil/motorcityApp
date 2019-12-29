@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
@@ -10,6 +12,7 @@ import './search.dart';
 import 'package:fab_menu/fab_menu.dart';
 import "package:flutter_keychain/flutter_keychain.dart";
 import "./settings.dart";
+import 'package:geolocator/geolocator.dart' as geo;
 
 class HomePage extends StatefulWidget {
   @override
@@ -52,22 +55,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   void trackUser() async {
+    geo.Geolocator geolocator = geo.Geolocator()
+      ..forceAndroidLocationManager = true;
+
+    // var geolocator = geo.Geolocator();
+    var locationOptions = geo.LocationOptions(
+        accuracy: geo.LocationAccuracy.bestForNavigation, distanceFilter: 0);
+
+    geo.GeolocationStatus geolocationStatus =
+        await geo.Geolocator().checkGeolocationPermissionStatus();
+
     var location = Location();
-    location.changeSettings(
-        accuracy: LocationAccuracy.NAVIGATION,
-        interval: 1000,
-        distanceFilter: 0);
-
-    // if (!await location.hasPermission()) {
-    //   await location.requestPermission();
-    // }
-
     bool isLocationEnabled = await location.serviceEnabled();
 
     if (!isLocationEnabled) {
       bool enableService = await location.requestService();
     }
-    
+
     var userID = await FlutterKeychain.get(key: "userID");
     FirebaseDatabase fbdb = FirebaseDatabase.instance;
     DatabaseReference dbrLat = fbdb
@@ -86,22 +90,74 @@ class _HomePageState extends State<HomePage> {
         .reference()
         .child('lng');
 
-    try {
-      location.onLocationChanged().listen((LocationData currentLocation) {
-        dbrLat.set(currentLocation.latitude);
-        dbrLng.set(currentLocation.longitude);
-      });
-    } on PlatformException {
-      location = null;
-    }
-    // ServiceStatus serviceStatus =
-    //     await LocationPermissions().checkServiceStatus();
-    // print("$serviceStatus");
-
-    // if (serviceStatus == ServiceStatus.disabled) {
-    //   bool isOpened = await LocationPermissions().openAppSettings();
-    // }
+    StreamSubscription<geo.Position> positionStream = geolocator
+        .getPositionStream(locationOptions)
+        .listen((geo.Position position) {
+      if (position != null) {
+        dbrLat.set(position.latitude);
+        dbrLng.set(position.longitude);
+      }
+      // print(position == null
+      //     ? 'Unknown'
+      //     : position.latitude.toString() +
+      //         ', ' +
+      //         position.longitude.toString());
+    });
   }
+
+  // void trackUser() async {
+  //   var location = Location();
+
+  //   location.changeSettings(
+  //       accuracy: LocationAccuracy.NAVIGATION,
+  //       interval: 1000,
+  //       distanceFilter: 0);
+
+  //   // if (!await location.hasPermission()) {
+  //   //   await location.requestPermission();
+  //   // }
+
+  //   bool isLocationEnabled = await location.serviceEnabled();
+
+  //   if (!isLocationEnabled) {
+  //     bool enableService = await location.requestService();
+  //   }
+
+  //   var userID = await FlutterKeychain.get(key: "userID");
+  //   FirebaseDatabase fbdb = FirebaseDatabase.instance;
+  //   DatabaseReference dbrLat = fbdb
+  //       .reference()
+  //       .child('locations')
+  //       .reference()
+  //       .child('$userID')
+  //       .reference()
+  //       .child('lat');
+
+  //   DatabaseReference dbrLng = fbdb
+  //       .reference()
+  //       .child('locations')
+  //       .reference()
+  //       .child('$userID')
+  //       .reference()
+  //       .child('lng');
+
+  //   try {
+  //     location.onLocationChanged().listen((LocationData currentLocation) {
+  //       dbrLat.set(currentLocation.latitude);
+  //       dbrLng.set(currentLocation.longitude);
+  //       print("${currentLocation.latitude} , ${currentLocation.longitude}");
+  //     });
+  //   } on PlatformException {
+  //     location = null;
+  //   }
+  //   // ServiceStatus serviceStatus =
+  //   //     await LocationPermissions().checkServiceStatus();
+  //   // print("$serviceStatus");
+
+  //   // if (serviceStatus == ServiceStatus.disabled) {
+  //   //   bool isOpened = await LocationPermissions().openAppSettings();
+  //   // }
+  // }
 
   void initState() {
     super.initState();
