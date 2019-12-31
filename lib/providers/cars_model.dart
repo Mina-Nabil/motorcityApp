@@ -106,7 +106,7 @@ class CarsModel with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print("Exception catched: " + e.toString());
+      // print("Exception catched: " + e.toString());
       throw HttpException('Can\'t connect to the server!');
     }
     return;
@@ -148,7 +148,7 @@ class CarsModel with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print("Exception catched: " + e.toString());
+      // print("Exception catched: " + e.toString());
       throw HttpException('Can\'t connect to the server!');
     }
   }
@@ -192,7 +192,7 @@ class CarsModel with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print("Exception catched: " + e.toString());
+      // print("Exception catched: " + e.toString());
       throw HttpException('Can\'t connect to the server!');
     }
   }
@@ -243,7 +243,7 @@ class CarsModel with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print("Exception catched: " + e.toString());
+      // print("Exception catched: " + e.toString());
       throw HttpException('Can\'t connect to the server!');
     }
     return true;

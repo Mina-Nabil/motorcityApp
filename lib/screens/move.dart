@@ -65,7 +65,6 @@ class _MovePageState extends State<MovePage> {
     });
 
     if (response.statusCode == 200) {
-      print(response.body);
       String result = jsonDecode(response.body)['result'];
       if (result.compareTo("Failed") == 0) {
         _showFailed(context);
