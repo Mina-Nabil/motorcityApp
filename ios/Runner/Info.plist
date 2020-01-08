@@ -12,10 +12,6 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Can you Please Allow Location Access?</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Can you Please Allow Location Access?</string>
 	<key>CFBundleName</key>
 	<string>motorcity</string>
 	<key>CFBundlePackageType</key>
@@ -28,6 +24,10 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Can you Please Allow Location Access?</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Can you Please Allow Location Access?</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
