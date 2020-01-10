@@ -363,8 +363,8 @@ class CarsModel with ChangeNotifier {
     if (selectedURL == null) {
       final prefs = await SharedPreferences.getInstance();
 
-      mgServerIP = prefs.getString(_mgKey) ?? "3.121.234.234";
-      peugeotServerIP = prefs.getString(_pgKey) ?? "192.168.1.202";
+      mgServerIP = prefs.getString(_mgKey) ?? "";
+      peugeotServerIP = prefs.getString(_pgKey) ?? "";
 
       mgServer = "http://" + mgServerIP + "/motorcity/api/";
       peugeotServer = "http://" + peugeotServerIP + "/motorcity/api/";

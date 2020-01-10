@@ -68,12 +68,13 @@ class RequestItem extends StatelessWidget {
                           children: <Widget>[
                             Container(
                               padding: EdgeInsets.only(top: 5, left: 15),
+                              width: 80,
                               child: Text(
-                                'From: ',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                                textAlign: TextAlign.left,
-                              ),
+                                  'From: ',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold, fontSize: 16),
+                                  textAlign: TextAlign.left,
+                                ),
                             ),
                             Expanded(
                                 child: Text('${req.from}',
@@ -89,11 +90,14 @@ class RequestItem extends StatelessWidget {
                             padding: EdgeInsets.only(left: 15, top: 5),
                             child: Row(
                               children: <Widget>[
-                                Text(
-                                  'To: ',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                Container(
+                                  width: 60,
+                                  child: Text(
+                                    'To: ',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                                 Expanded(
                                     child: Text(
@@ -110,6 +114,7 @@ class RequestItem extends StatelessWidget {
                             flex: 2,
                             child: Container(
                                 padding: EdgeInsets.only(left: 15, top: 5),
+                                width: 60,
                                 child: Text(
                                   "Car: ",
                                   style: TextStyle(

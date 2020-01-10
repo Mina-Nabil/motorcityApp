@@ -65,6 +65,7 @@ class SettingsPage extends StatelessWidget {
                 width: double.infinity,
                 child: Builder(
                   builder: (context2) => RaisedButton(
+                  color: Color.fromRGBO(0, 46, 72, 1),
                   child: Text("Submit",
                   style: TextStyle(
                     color: Colors.white,
