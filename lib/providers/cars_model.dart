@@ -28,6 +28,7 @@ class CarsModel with ChangeNotifier {
   final String _locationURL = 'locations';
   final String _requestsURL = 'requests';
   final String _loginURL = 'driverLogin';
+  final String _moveURL = "submit/move";
   final String _acceptTruckRequestURL = "request/accept";
   final String _completeTruckRequestURL = "request/complete";
   final String _cancelTruckRequestURL = "request/cancel";
@@ -247,6 +248,42 @@ class CarsModel with ChangeNotifier {
       throw HttpException('Can\'t connect to the server!');
     }
     return true;
+  }
+
+  Future<bool> moveCar({driverID, startLoct, endLoct, carID, km, date, comment}) async {
+    try {
+       final response =
+          await http.post(selectedURL + _moveURL, body: {
+        "DriverID": driverID,
+        "startLocation": startLoct,
+        "endLocation": endLoct,
+        "InventoryID": carID,
+        "KMs": km,
+        "Date": date,
+        "Comment": comment
+      }, headers: _requestHeaders);
+      if (response.statusCode == 200) {
+        final dynamic decodedJson = jsonDecode(cleanResponse(response.body));
+
+        //Check if User is Authorized
+        if (decodedJson is Map<String, dynamic> &&
+            decodedJson.containsKey("headers") &&
+            decodedJson['headers'] == false) {
+          this.logout();
+          return false;
+        }
+        String result = decodedJson['result'];
+        if (result.compareTo("Failed") == 0) {
+          return false;
+        } else {
+          this.loadCars(force: true);
+          return true;
+        }
+      }
+    } catch (e){
+      return false;
+    }
+    return false;
   }
 
   Future<bool> login({String user, String password}) async {
