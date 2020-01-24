@@ -6,7 +6,6 @@ import 'package:motorcity/screens/home.dart';
 import 'package:provider/provider.dart';
 import "package:motorcity/models/car.dart";
 import "package:motorcity/models/location.dart";
-import "package:http/http.dart" as http;
 
 class MovePage extends StatefulWidget {
   final Car car;
@@ -26,6 +25,7 @@ class _MovePageState extends State<MovePage> {
 
   TextEditingController _commentController = new TextEditingController();
   TextEditingController _kmController = new TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   initState() {
@@ -41,35 +41,32 @@ class _MovePageState extends State<MovePage> {
   }
 
   Future<Null> submitForm() async {
-    String startLoct = this.car.loctID;
-    String endLoct = _selectedDrop.toString();
-    String km = _kmController.text;
-    String comment = _commentController.text;
-    String driverID = CarsModel.userID;
-    DateTime tmp = DateTime.now();
-    String date = tmp.year.toString() +
-        "-" +
-        tmp.month.toString() +
-        '-' +
-        tmp.day.toString();
+    if (_formKey.currentState.validate()) {
+      String startLoct = this.car.loctID;
+      String endLoct = _selectedDrop.toString();
+      String km = _kmController.text;
+      String comment = _commentController.text;
+      String driverID = CarsModel.userID;
+      DateTime tmp = DateTime.now();
+      String date = tmp.year.toString() +
+          "-" +
+          tmp.month.toString() +
+          '-' +
+          tmp.day.toString();
 
-    final response =
-        await http.post(CarsModel.selectedURL + "submit/move", body: {
-      "DriverID": driverID,
-      "startLocation": startLoct,
-      "endLocation": endLoct,
-      "InventoryID": car.id,
-      "KMs": km,
-      "Date": date,
-      "Comment": comment
-    });
+      bool res = await Provider.of<CarsModel>(context).moveCar(
+          startLoct: startLoct,
+          endLoct: endLoct,
+          km: km,
+          comment: comment,
+          driverID: driverID,
+          carID: car.id,
+          date: date);
 
-    if (response.statusCode == 200) {
-      String result = jsonDecode(response.body)['result'];
-      if (result.compareTo("Failed") == 0) {
-        _showFailed(context);
-      } else {
+      if (res) {
         _showSuccess(context);
+      } else {
+        _showFailed(context);
       }
     }
   }
@@ -88,6 +85,7 @@ class _MovePageState extends State<MovePage> {
           padding: EdgeInsets.all(20),
           margin: EdgeInsets.all(20),
           child: Form(
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
@@ -176,9 +174,16 @@ class _MovePageState extends State<MovePage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Text("KMs: ", style: TextStyle(fontSize: 20)),
-                      TextField(
-                        controller: _kmController,
-                      )
+                      TextFormField(
+                          controller: _kmController,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter number of KM';
+                            } if(!isNumeric(value)){
+                              return 'Please enter a valid number';
+                            }
+                            return null;
+                          })
                     ],
                   ),
                 ),
@@ -265,4 +270,16 @@ class _MovePageState extends State<MovePage> {
       },
     );
   }
+
+  bool isNumeric(String s) {
+  if(s == null) {
+    return false;
+  }
+  try{
+    return double.parse(s) is double ;
+  } catch(e){
+    return false;
+  }
+  
+}
 }
