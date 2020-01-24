@@ -8,6 +8,78 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:479034416908:android:a830b5f88a8b6095f67329",
+        "android_client_info": {
+          "package_name": "app.msquare.motorcity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "479034416908-idiiqktiag9buahedqaaissg2q9nm4ll.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXX99ZU6zY1RMsTrAMpQxC5rRk8_LrwQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "479034416908-idiiqktiag9buahedqaaissg2q9nm4ll.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "479034416908-2ra2364g6nlsoorm8i6b453t0hdda3i4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "hhh"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:479034416908:android:d48d2bc7bb3f23b6f67329",
+        "android_client_info": {
+          "package_name": "app.msquare.motorcitytracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "479034416908-idiiqktiag9buahedqaaissg2q9nm4ll.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXX99ZU6zY1RMsTrAMpQxC5rRk8_LrwQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "479034416908-idiiqktiag9buahedqaaissg2q9nm4ll.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "479034416908-2ra2364g6nlsoorm8i6b453t0hdda3i4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "hhh"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:479034416908:android:a5137a1b64aea9ddf67329",
         "android_client_info": {
           "package_name": "com.example.motorcity"
@@ -32,46 +104,10 @@
               "client_type": 3
             },
             {
-              "client_id": "479034416908-ti8kb2tsdh5r2ge56thbik2r38o3hqil.apps.googleusercontent.com",
+              "client_id": "479034416908-2ra2364g6nlsoorm8i6b453t0hdda3i4.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.motorcityTracking"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:479034416908:android:4794f393ed21df83f67329",
-        "android_client_info": {
-          "package_name": "com.example.motorcity_tracking"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "479034416908-idiiqktiag9buahedqaaissg2q9nm4ll.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDXX99ZU6zY1RMsTrAMpQxC5rRk8_LrwQ4"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "479034416908-idiiqktiag9buahedqaaissg2q9nm4ll.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "479034416908-ti8kb2tsdh5r2ge56thbik2r38o3hqil.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.motorcityTracking"
+                "bundle_id": "hhh"
               }
             }
           ]

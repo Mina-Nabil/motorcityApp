@@ -1,4 +1,4 @@
-package com.example.motorcity;
+package app.msquare.motorcity;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
