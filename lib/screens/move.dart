@@ -179,7 +179,7 @@ class _MovePageState extends State<MovePage> {
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Please enter number of KM';
-                            } else if(!isNumeric(value)){
+                            } if(!isNumeric(value)){
                               return 'Please enter a valid number';
                             }
                             return null;
