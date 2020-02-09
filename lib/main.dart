@@ -1,3 +1,4 @@
+import './models/notification_handler.dart';
 import 'package:motorcity/screens/login.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,12 @@ class MotorCityApp extends StatefulWidget {
 }
 
 class _MotorCityAppState extends State<MotorCityApp> {
+  @override
+  void initState() {
+    super.initState();
+    new FirebaseNotifications().setUpFirebase(this.context);
+  }
+
   Widget build(BuildContext context) {
     return MaterialApp(
         initialRoute: '/',
