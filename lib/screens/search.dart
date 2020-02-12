@@ -40,7 +40,7 @@ class _SearchCarsState extends State<SearchCars> {
           placeholder: "Search..",
           results: carsModel.inventoryCars
               .map((car) => MaterialSearchResult<String>(
-                  text: car.chassis, value: car.id + '%' + car.chassis))
+                  text: car.chassis + " - " + car.color, value: car.id + '%' + car.chassis))
               .toList(),
           filter: (dynamic value, String criteria) {
             return value
