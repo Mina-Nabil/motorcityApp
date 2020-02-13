@@ -54,15 +54,22 @@ class FirebaseNotifications {
         final title = notification['title'];
         final body = notification['body'];
         _showNotificationWithDefaultSound(title, body);
+        print("Geet Hna");
       },
-      onResume: (Map<String, dynamic> message) async {},
-      onLaunch: (Map<String, dynamic> message) async {},
+      onResume: (Map<String, dynamic> message) async {
+        print("la2 Geet Hna");
+
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("lalala ana Geet Hna");
+
+      },
     );
   }
 
   void iOS_Permission() {
     _firebaseMessaging.requestNotificationPermissions(
-        IosNotificationSettings(sound: true, badge: true, alert: true));
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
     _firebaseMessaging.onIosSettingsRegistered
         .listen((IosNotificationSettings settings) {
       print("Settings registered: $settings");
