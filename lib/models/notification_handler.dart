@@ -5,7 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FirebaseNotifications {
   FirebaseMessaging _firebaseMessaging;
-  static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   BuildContext context;
 
   void setUpFirebase(BuildContext context) {
@@ -23,7 +23,7 @@ class FirebaseNotifications {
     firebaseCloudMessagingListeners();
   }
 
-  static Future _showNotificationWithDefaultSound(String title, String message) async {
+  Future _showNotificationWithDefaultSound(String title, String message) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'app.msquare', 'motorcity', 'motorcity',
         importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
@@ -56,7 +56,6 @@ class FirebaseNotifications {
         _showNotificationWithDefaultSound(title, body);
         print("Geet Hna");
       },
-      onBackgroundMessage: myBackgroundMessageHandler,
       onResume: (Map<String, dynamic> message) async {
         print("la2 Geet Hna");
       },
@@ -65,27 +64,7 @@ class FirebaseNotifications {
       },
     );
   }
-
-  static Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
-    if (message.containsKey('data')) {
-      // Handle data message
-      final dynamic data = message['data'];
-    }
-
-    if (message.containsKey('notification')) {
-      if (Platform.isIOS) {
-        // Handle notification message
-        final dynamic notification = message['notification'];
-
-        final title = notification['title'];
-        final body = notification['body'];
-        _showNotificationWithDefaultSound(title, body);
-      }
-    }
-
-    // Or do other work.
-  }
-
+  
   void iOS_Permission() {
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, badge: true, alert: true));
