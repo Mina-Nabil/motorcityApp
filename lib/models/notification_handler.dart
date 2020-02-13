@@ -53,7 +53,9 @@ class FirebaseNotifications {
 
         final title = notification['title'];
         final body = notification['body'];
-        _showNotificationWithDefaultSound(title, body);
+        if (Platform.isAndroid) {
+          _showNotificationWithDefaultSound(title, body);
+        }
         print("Geet Hna");
       },
       onResume: (Map<String, dynamic> message) async {
@@ -64,7 +66,7 @@ class FirebaseNotifications {
       },
     );
   }
-  
+
   void iOS_Permission() {
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, badge: true, alert: true));
