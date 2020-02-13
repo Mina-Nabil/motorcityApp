@@ -5,7 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FirebaseNotifications {
   FirebaseMessaging _firebaseMessaging;
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   BuildContext context;
 
   void setUpFirebase(BuildContext context) {
@@ -23,7 +23,7 @@ class FirebaseNotifications {
     firebaseCloudMessagingListeners();
   }
 
-  Future _showNotificationWithDefaultSound(String title, String message) async {
+  static Future _showNotificationWithDefaultSound(String title, String message) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'app.msquare', 'motorcity', 'motorcity',
         importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
@@ -66,7 +66,7 @@ class FirebaseNotifications {
     );
   }
 
-  Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
+  static Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
     if (message.containsKey('data')) {
       // Handle data message
       final dynamic data = message['data'];
