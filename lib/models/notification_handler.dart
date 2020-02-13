@@ -53,9 +53,8 @@ class FirebaseNotifications {
 
         final title = notification['title'];
         final body = notification['body'];
-        if (Platform.isAndroid) {
-          _showNotificationWithDefaultSound(title, body);
-        }
+        _showNotificationWithDefaultSound(title, body);
+
         print("Geet Hna");
       },
       onResume: (Map<String, dynamic> message) async {
