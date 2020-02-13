@@ -56,15 +56,34 @@ class FirebaseNotifications {
         _showNotificationWithDefaultSound(title, body);
         print("Geet Hna");
       },
+      onBackgroundMessage: myBackgroundMessageHandler,
       onResume: (Map<String, dynamic> message) async {
         print("la2 Geet Hna");
-
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("lalala ana Geet Hna");
-
       },
     );
+  }
+
+  Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
+    if (message.containsKey('data')) {
+      // Handle data message
+      final dynamic data = message['data'];
+    }
+
+    if (message.containsKey('notification')) {
+      if (Platform.isIOS) {
+        // Handle notification message
+        final dynamic notification = message['notification'];
+
+        final title = notification['title'];
+        final body = notification['body'];
+        _showNotificationWithDefaultSound(title, body);
+      }
+    }
+
+    // Or do other work.
   }
 
   void iOS_Permission() {
