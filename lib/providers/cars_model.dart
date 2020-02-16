@@ -299,6 +299,7 @@ class CarsModel with ChangeNotifier {
           await FlutterKeychain.put(key: "userName", value: user);
           await FlutterKeychain.put(key: "token", value: token);
           await FlutterKeychain.put(key: "userType", value: "driver");
+          await FlutterKeychain.put(key: "date", value: DateTime.now().millisecondsSinceEpoch.toString());
 
           initHeaders();
 
@@ -468,20 +469,29 @@ class CarsModel with ChangeNotifier {
   Future<bool> checkIfAuthenticated() async {
     try {
       var userID = await FlutterKeychain.get(key: "userID");
-      if (userID != null) {
+      var date = await FlutterKeychain.get(key: "date");
+      if(date==null) {
+        await logout();
+        return false;
+        }
+      int lastLogin = int.parse(date);
+      if (userID != null && lastLogin > DateTime.now().add(Duration(hours: 6)).millisecond ) {
         this.setUserID(userID);
         _isAuthenticated = true;
         return true;
-      } else
+      } else {
+        await logout();
         return false;
+      }
     } catch (e) {
+      await logout();
       return false;
     }
   }
 
-  void logout() async {
+  Future<void> logout() async {
     _isAuthenticated = false;
-    FlutterKeychain.clear();
+    await FlutterKeychain.clear();
   }
 
   String cleanResponse(json) {

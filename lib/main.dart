@@ -7,18 +7,6 @@ import 'package:motorcity/screens/home.dart';
 import 'package:flutter_keychain/flutter_keychain.dart';
 import 'package:location_permissions/location_permissions.dart';
 
-Future<bool> checkIfAuthenticated(context) async {
-  try {
-    var userID = await FlutterKeychain.get(key: "userID");
-    if (userID != null) {
-      Provider.of<CarsModel>(context).setUserID(userID);
-      return true;
-    } else
-      return false;
-  } catch (e) {
-    return false;
-  }
-}
 
 Future<void> main() async {
   runApp(ChangeNotifierProvider(
@@ -66,7 +54,7 @@ class _MotorCityAppState extends State<MotorCityApp> {
 class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    checkIfAuthenticated(context).then((success) {
+    Provider.of<CarsModel>(context).checkIfAuthenticated().then((success) {
       if (success) {
         Navigator.pushReplacementNamed(context, '/home');
       } else {
