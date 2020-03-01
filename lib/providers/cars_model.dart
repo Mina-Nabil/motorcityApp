@@ -5,7 +5,6 @@ import 'package:motorcity/models/http_exception.dart';
 import 'package:motorcity/models/location.dart';
 import 'package:motorcity/models/truckrequest.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_keychain/flutter_keychain.dart';
 import "package:shared_preferences/shared_preferences.dart";
 
 class CarsModel with ChangeNotifier {
@@ -295,15 +294,15 @@ class CarsModel with ChangeNotifier {
         var id = loginBody['id'];
         var token = loginBody['token'];
         if (id != null) {
-          await FlutterKeychain.put(key: "userID", value: id);
-          await FlutterKeychain.put(key: "userName", value: user);
-          await FlutterKeychain.put(key: "token", value: token);
-          await FlutterKeychain.put(key: "userType", value: "driver");
-          await FlutterKeychain.put(key: "date", value: DateTime.now().millisecondsSinceEpoch.toString());
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setInt("userID",  id);
+          await prefs.setString("userName", user);
+          await prefs.setString("token", token);
+          await prefs.setString("userType", "driver");
+          await prefs.setString("date", DateTime.now().millisecondsSinceEpoch.toString());
 
           initHeaders();
 
-          final prefs = await SharedPreferences.getInstance();
           prefs.setString(_selectedKey, selectedURL);
           userID = id;
           _isAuthenticated = true;
@@ -323,7 +322,8 @@ class CarsModel with ChangeNotifier {
 
   Future<bool> acceptTruckRequest(reqId) async {
     try {
-      String drvrID = await FlutterKeychain.get(key: "userID");
+      final prefs = await SharedPreferences.getInstance();
+      String drvrID = prefs.get("userID");
       if (_requestHeaders['token'] == null ||
           _requestHeaders['userType'] == null) await initHeaders();
       final bodyArr = {"DriverID": drvrID, "RequestID": reqId};
@@ -348,7 +348,8 @@ class CarsModel with ChangeNotifier {
 
   Future<bool> completeTruckRequest(reqId) async {
     try {
-      String drvrID = await FlutterKeychain.get(key: "userID");
+      final prefs = await SharedPreferences.getInstance();
+      String drvrID = prefs.get("userID");
       if (_requestHeaders['token'] == null ||
           _requestHeaders['userType'] == null) await initHeaders();
       final bodyArr = {"DriverID": drvrID, "RequestID": reqId};
@@ -373,7 +374,8 @@ class CarsModel with ChangeNotifier {
 
   Future<bool> cancelTruckRequest(reqId) async {
     try {
-      String drvrID = await FlutterKeychain.get(key: "userID");
+      final prefs = await SharedPreferences.getInstance();
+      String drvrID = prefs.get("userID");
       if (_requestHeaders['token'] == null ||
           _requestHeaders['userType'] == null) await initHeaders();
       final bodyArr = {"DriverID": drvrID, "RequestID": reqId};
@@ -412,9 +414,10 @@ class CarsModel with ChangeNotifier {
   }
 
   Future<void> initHeaders() async {
+    final prefs = await SharedPreferences.getInstance();
     this._requestHeaders.addAll({
-      "token": await FlutterKeychain.get(key: "token"),
-      "userType": await FlutterKeychain.get(key: "userType")
+      "token": prefs.get("token"),
+      "userType": prefs.get("userType")
     });
   }
 
@@ -468,8 +471,9 @@ class CarsModel with ChangeNotifier {
 
   Future<bool> checkIfAuthenticated() async {
     try {
-      var userID = await FlutterKeychain.get(key: "userID");
-      var date = await FlutterKeychain.get(key: "date");
+      final prefs = await SharedPreferences.getInstance();
+      var userID = prefs.get("userID");
+      var date = prefs.get("date");
       if(date==null) {
         await logout();
         return false;
@@ -491,7 +495,8 @@ class CarsModel with ChangeNotifier {
 
   Future<void> logout() async {
     _isAuthenticated = false;
-    await FlutterKeychain.clear();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 
   String cleanResponse(json) {

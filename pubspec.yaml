@@ -29,10 +29,9 @@ dependencies:
   # Adding provider package for Car Model
   provider: ^3.0.0
   # Adding keychain to save userID & session data
-  flutter_keychain: ^1.0.0
+  shared_preferences: ^0.5.6
   # Adding material_search for search page
   material_search: ^0.2.8
-  shared_preferences: ^0.4.3
   fluttertoast: ^3.1.0
 
   fab_menu: ^0.0.2

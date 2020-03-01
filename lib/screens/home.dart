@@ -10,7 +10,7 @@ import '../providers/cars_model.dart';
 import 'package:provider/provider.dart';
 import './search.dart';
 import 'package:fab_menu/fab_menu.dart';
-import "package:flutter_keychain/flutter_keychain.dart";
+import "package:shared_preferences/shared_preferences.dart";
 import "./settings.dart";
 import 'package:geolocator/geolocator.dart' as geo;
 
@@ -71,8 +71,8 @@ class _HomePageState extends State<HomePage> {
     if (!isLocationEnabled) {
       bool enableService = await location.requestService();
     }
-
-    var userID = await FlutterKeychain.get(key: "userID");
+    final prefs = await SharedPreferences.getInstance();
+    var userID = prefs.get("userID");
     FirebaseDatabase fbdb = FirebaseDatabase.instance;
     DatabaseReference dbrLat = fbdb
         .reference()
