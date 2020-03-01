@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:motorcity/models/car.dart';
 import 'package:motorcity/models/http_exception.dart';
@@ -295,7 +296,7 @@ class CarsModel with ChangeNotifier {
         var token = loginBody['token'];
         if (id != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setInt("userID",  id);
+          await prefs.setString("userID",  id);
           await prefs.setString("userName", user);
           await prefs.setString("token", token);
           await prefs.setString("userType", "driver");
@@ -309,9 +310,12 @@ class CarsModel with ChangeNotifier {
           return true;
         } else
           return false;
-      } else
+      } else{
+        print(response.statusCode.toString());
         return false;
+      }
     } catch (e) {
+      print("Exception: " + e.toString());
       return false;
     }
   }
