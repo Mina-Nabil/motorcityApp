@@ -30,7 +30,7 @@ class _MovePageState extends State<MovePage> {
   @override
   initState() {
     Future.delayed(Duration.zero).then(
-        (_) => Provider.of<CarsModel>(context, listen: false).loadLocations());
+        (_) => Provider.of<CarsModel>(context, listen: false).loadLocations(force: true));
     super.initState();
   }
 
@@ -102,9 +102,9 @@ class _MovePageState extends State<MovePage> {
                       Text("Model:  ",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text(widget.car.brand + " " + widget.car.model,
+                      Expanded(child: Text(widget.car.brand + " " + widget.car.model,
                           style: TextStyle(
-                              fontSize: 17, fontStyle: FontStyle.italic)),
+                              fontSize: 17, fontStyle: FontStyle.italic))),
                     ],
                   ),
                 ),
@@ -115,9 +115,9 @@ class _MovePageState extends State<MovePage> {
                       Text("Color:  ",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text(widget.car.color + " / " + widget.car.colorCode,
+                      Expanded(child: Text(widget.car.color + " / " + widget.car.colorCode,
                           style: TextStyle(
-                              fontSize: 17, fontStyle: FontStyle.italic)),
+                              fontSize: 17, fontStyle: FontStyle.italic))),
                     ],
                   ),
                 ),
@@ -128,9 +128,9 @@ class _MovePageState extends State<MovePage> {
                       Text("Chassis:  ",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text(widget.car.chassis,
+                      Expanded(child: Text(widget.car.chassis,
                           style: TextStyle(
-                              fontSize: 17, fontStyle: FontStyle.italic)),
+                              fontSize: 17, fontStyle: FontStyle.italic))),
                     ],
                   ),
                 ),
@@ -141,9 +141,9 @@ class _MovePageState extends State<MovePage> {
                       Text("Location:  ",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text(widget.car.location,
+                      Expanded(child: Text(widget.car.location,
                           style: TextStyle(
-                              fontSize: 17, fontStyle: FontStyle.italic)),
+                              fontSize: 17, fontStyle: FontStyle.italic))),
                     ],
                   ),
                 ),
