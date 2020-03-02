@@ -483,7 +483,7 @@ class CarsModel with ChangeNotifier {
         return false;
         }
       int lastLogin = int.parse(date);
-      if (userID != null && lastLogin > DateTime.now().add(Duration(days: 3)).millisecond ) {
+      if (userID != null && lastLogin > DateTime.now().add(Duration(hours: 12)).millisecond ) {
         this.setUserID(userID);
         _isAuthenticated = true;
         return true;
