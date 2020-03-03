@@ -35,12 +35,12 @@ class _LoginPageState extends State<LoginPage> {
         Icons.directions_car, (context, menuData) {
         Provider.of<CarsModel>(context).setSelectedServerPeugeot();
         Scaffold.of(context).showSnackBar(
-            new SnackBar(content: new Text('Peugeot Server Selected!')));
+            new SnackBar(content: new Text('Peugeot Server Selected!'), duration: Duration(milliseconds: 300)));
       },labelText: 'Peugeot'),
       new MenuData(Icons.directions_car, (context, menuData) {
         Provider.of<CarsModel>(context).setSelectedServerMG();
         Scaffold.of(context).showSnackBar(
-            new SnackBar(content: new Text('MG Server Selected!')));
+            new SnackBar(content: new Text('MG Server Selected!'), duration: Duration(milliseconds: 300)));
       },labelText: 'MG')
     ];
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:motorcity/models/car.dart';
 import 'package:motorcity/models/http_exception.dart';
@@ -71,17 +72,15 @@ class CarsModel with ChangeNotifier {
       notifyListeners();
       return;
     }
-
     try {
       if (selectedURL == null) await initServers();
       if (_requestHeaders['token'] == null ||
           _requestHeaders['userType'] == null) await initHeaders();
       _pendingCars = [];
-      notifyListeners();
       String apiURL = selectedURL + _pendingURL;
       final response = await http
           .get(apiURL, headers: _requestHeaders)
-          .timeout(Duration(seconds: 4));
+          .timeout(Duration(seconds: 2));
       if (response.statusCode == 200) {
         final dynamic decodedJson = json.decode(cleanResponse(response.body));
 
@@ -108,6 +107,7 @@ class CarsModel with ChangeNotifier {
       }
     } catch (e) {
       // print("Exception catched: " + e.toString());
+      notifyListeners();
       throw HttpException('Can\'t connect to the server!');
     }
     return;
@@ -118,7 +118,6 @@ class CarsModel with ChangeNotifier {
       notifyListeners();
       return;
     }
-
     try {
       if (selectedURL == null) await initServers();
       if (_requestHeaders['token'] == null ||
@@ -127,7 +126,7 @@ class CarsModel with ChangeNotifier {
       String apiURL = selectedURL + _inventoryURL;
       final response = await http
           .get(apiURL, headers: _requestHeaders)
-          .timeout(Duration(seconds: 4));
+          .timeout(Duration(seconds: 2));
       if (response.statusCode == 200) {
         final dynamic decodedJson = json.decode(cleanResponse(response.body));
 
@@ -150,6 +149,8 @@ class CarsModel with ChangeNotifier {
       }
     } catch (e) {
       // print("Exception catched: " + e.toString());
+      _inventoryCars = [];
+      notifyListeners();
       throw HttpException('Can\'t connect to the server!');
     }
   }
@@ -170,7 +171,7 @@ class CarsModel with ChangeNotifier {
 
       final response = await http
           .get(apiURL, headers: _requestHeaders)
-          .timeout(Duration(seconds: 4));
+          .timeout(Duration(seconds: 2));
       if (response.statusCode == 200) {
         final dynamic decodedJson = json.decode(cleanResponse(response.body));
 
@@ -194,6 +195,7 @@ class CarsModel with ChangeNotifier {
       }
     } catch (e) {
       // print("Exception catched: " + e.toString());
+      notifyListeners();
       throw HttpException('Can\'t connect to the server!');
     }
   }
@@ -213,7 +215,7 @@ class CarsModel with ChangeNotifier {
       String apiURL = mgServer + _requestsURL;
       final response = await http.post(apiURL,
           headers: _requestHeaders,
-          body: {"DriverID": userID}).timeout(Duration(seconds: 4));
+          body: {"DriverID": userID}).timeout(Duration(seconds: 2));
       if (response.statusCode == 200) {
         final dynamic decodedJson = json.decode(cleanResponse(response.body));
 
@@ -245,6 +247,7 @@ class CarsModel with ChangeNotifier {
       }
     } catch (e) {
       // print("Exception catched: " + e.toString());
+      notifyListeners();
       throw HttpException('Can\'t connect to the server!');
     }
     return true;
@@ -334,7 +337,7 @@ class CarsModel with ChangeNotifier {
       final response = await http
           .post(mgServer + _acceptTruckRequestURL,
               headers: _requestHeaders, body: bodyArr)
-          .timeout(Duration(seconds: 5));
+          .timeout(Duration(seconds: 2));
 
       if (response.statusCode == 200) {
         final serverResponse = json.decode(cleanResponse(response.body));
@@ -360,7 +363,7 @@ class CarsModel with ChangeNotifier {
       final response = await http
           .post(mgServer + _completeTruckRequestURL,
               headers: _requestHeaders, body: bodyArr)
-          .timeout(Duration(seconds: 5));
+          .timeout(Duration(seconds: 2));
 
       if (response.statusCode == 200) {
         final serverResponse = json.decode(cleanResponse(response.body));
@@ -386,7 +389,7 @@ class CarsModel with ChangeNotifier {
       final response = await http
           .post(mgServer + _cancelTruckRequestURL,
               headers: _requestHeaders, body: bodyArr)
-          .timeout(Duration(seconds: 5));
+          .timeout(Duration(seconds: 2));
 
       if (response.statusCode == 200) {
         final serverResponse = json.decode(cleanResponse(response.body));
@@ -404,11 +407,18 @@ class CarsModel with ChangeNotifier {
 
 /////////////////////////Model Management Functions/////////////////////////////
   Future<void> initServers() async {
+
     if (selectedURL == null) {
+      final directory = await getApplicationDocumentsDirectory();
+      final pgFile    =  new File("${directory.path}/pg_server.txt");
+      final mgFile   =  new File("${directory.path}/mg_server.txt");
+      mgServerIP = await mgFile.readAsString();
+      peugeotServerIP = await pgFile.readAsString();
+
       final prefs = await SharedPreferences.getInstance();
 
-      mgServerIP = prefs.getString(_mgKey) ?? "";
-      peugeotServerIP = prefs.getString(_pgKey) ?? "";
+      // mgServerIP = prefs.getString(_mgKey) ?? "";
+      // peugeotServerIP = prefs.getString(_pgKey) ?? "";
 
       mgServer = "http://" + mgServerIP + "/motorcity/api/";
       peugeotServer = "http://" + peugeotServerIP + "/motorcity/api/";
@@ -433,6 +443,14 @@ class CarsModel with ChangeNotifier {
 
     mgServerIP = mgIP;
     peugeotServerIP = peugeotIP;
+    //Writing IPs to files
+    final directory = await getApplicationDocumentsDirectory();
+    final pgFile    =  new File("${directory.path}/pg_server.txt");
+    final mgFile   =  new File("${directory.path}/mg_server.txt");
+    pgFile.writeAsString(peugeotServerIP);
+    mgFile.writeAsString(mgServerIP);
+
+
     final prefs = await SharedPreferences.getInstance();
 
     mgServer = "http://" + mgServerIP + "/motorcity/api/";
@@ -451,7 +469,7 @@ class CarsModel with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(_selectedKey, selectedURL);
 
-    _resetAllData();
+    //_resetAllData(force: true);
   }
 
   void setSelectedServerPeugeot({bool refreshCars = false}) async {
@@ -459,13 +477,13 @@ class CarsModel with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(_selectedKey, selectedURL);
 
-    _resetAllData();
+    //_resetAllData(force: true);
   }
 
-  Future<void> _resetAllData() async {
-    await loadInventory();
-    await loadLocations();
-    await loadCars();
+  Future<void> _resetAllData({force=false}) async {
+    await loadInventory(force: force);
+    await loadLocations(force: force);
+    await loadCars(force: force);
   }
 
   void setUserID(String id) {
@@ -475,6 +493,16 @@ class CarsModel with ChangeNotifier {
 
   Future<bool> checkIfAuthenticated() async {
     try {
+      final directory = await getApplicationDocumentsDirectory();
+      final pgFile    =  new File("${directory.path}/pg_server.txt");
+      final mgFile   =  new File("${directory.path}/mg_server.txt");
+      mgServerIP = await mgFile.readAsString();
+      peugeotServerIP = await pgFile.readAsString();
+
+      if(mgServerIP == null && peugeotServerIP == null){
+        return false;
+      }
+
       final prefs = await SharedPreferences.getInstance();
       var userID = prefs.get("userID");
       var date = prefs.get("date");

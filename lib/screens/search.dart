@@ -15,10 +15,12 @@ class SearchCars extends StatefulWidget {
 class _SearchCarsState extends State<SearchCars> {
   _SearchCarsState();
 
-  Map<int, Car> cars = new Map<int, Car>();
+
 
   Future<Null> _refreshPage(context) async {
+
     await Provider.of<CarsModel>(context).loadInventory(force: true);
+
   }
 
   @override

@@ -24,11 +24,12 @@ class _HomePageState extends State<HomePage> {
     try {
       await Provider.of<CarsModel>(context).loadCars(force: true);
 
-      //await Provider.of<CarsModel>(context).loadTruckRequests(force: true);
+      await Provider.of<CarsModel>(context).loadTruckRequests(force: true);
       await Provider.of<CarsModel>(context).loadInventory(force: true);
+      await Provider.of<CarsModel>(context).loadLocations(force: true);
     } catch (e) {
       Scaffold.of(context).showSnackBar(SnackBar(
-          duration: Duration(milliseconds: 1000), content: Text(e.toString())));
+          duration: Duration(milliseconds: 500), content: Text(e.toString())));
     }
     return;
   }
@@ -174,14 +175,14 @@ class _HomePageState extends State<HomePage> {
         Provider.of<CarsModel>(context).setSelectedServerPeugeot();
         _refreshPage(context);
         Scaffold.of(context).showSnackBar(new SnackBar(
-            duration: Duration(milliseconds: 500),
+            duration: Duration(milliseconds: 300),
             content: new Text('Peugeot Server Selected!')));
       }, labelText: 'Peugeot'),
       new MenuData(Icons.directions_car, (context, menuData) async {
         Provider.of<CarsModel>(context).setSelectedServerMG();
         _refreshPage(context);
         Scaffold.of(context).showSnackBar(new SnackBar(
-            duration: Duration(milliseconds: 500),
+            duration: Duration(milliseconds: 300),
             content: new Text('MG Server Selected!')));
       }, labelText: 'MG'),
       new MenuData(Icons.lock_outline, (context, menuData) {
