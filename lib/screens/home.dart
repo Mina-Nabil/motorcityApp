@@ -13,6 +13,7 @@ import 'package:fab_menu/fab_menu.dart';
 import "package:shared_preferences/shared_preferences.dart";
 import "./settings.dart";
 import 'package:geolocator/geolocator.dart' as geo;
+import 'package:flutter_background_location/flutter_background_location.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -91,19 +92,33 @@ class _HomePageState extends State<HomePage> {
         .reference()
         .child('lng');
 
-    StreamSubscription<geo.Position> positionStream = geolocator
-        .getPositionStream(locationOptions)
-        .listen((geo.Position position) {
-      if (position != null) {
-        dbrLat.set(position.latitude);
-        dbrLng.set(position.longitude);
+    FlutterBackgroundLocation.startLocationService();
+
+    FlutterBackgroundLocation.getLocationUpdates((location) async {
+      // print("${location.latitude}  , ${location.longitude}"  );
+      if (location != null) {
+        dbrLat.set(location.latitude);
+        dbrLng.set(location.longitude);
       }
-      // print(position == null
-      //     ? 'Unknown'
-      //     : position.latitude.toString() +
-      //         ', ' +
-      //         position.longitude.toString());
+      await Future.delayed(Duration(seconds: 2));
     });
+
+    // StreamSubscription<geo.Position> positionStream = geolocator
+    //     .getPositionStream(locationOptions)
+    //     .listen((geo.Position position) {
+    //   if (position != null) {
+    //     dbrLat.set(position.latitude);
+    //     dbrLng.set(position.longitude);
+    //   }
+    // });
+
+
+    // print(position == null
+    //     ? 'Unknown'
+    //     : position.latitude.toString() +
+    //         ', ' +
+    //         position.longitude.toString());
+
   }
 
   // void trackUser() async {

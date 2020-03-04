@@ -17,12 +17,14 @@ class RequestItem extends StatelessWidget {
         color: (req.status == '1') ? Colors.green[100] : Colors.white,
         child: FlatButton(
             onPressed: () => {
-              if (req.status == '1') 
-                RequestDialog(context, req.id).show() 
-              else if(req.status == '2')
-                InProgressDialog(context, req.id).show() },
+                  if (req.status == '1')
+                    RequestDialog(context, req.id).show()
+                  else if (req.status == '2')
+                    InProgressDialog(context, req.id).show()
+                },
             child: Container(
               width: double.infinity,
+              height: 200,
               padding: const EdgeInsets.all(5),
               child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                 Flexible(
@@ -36,22 +38,31 @@ class RequestItem extends StatelessWidget {
                   flex: 8,
                   fit: FlexFit.loose,
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Container(
+                         Flexible(
+                           fit: FlexFit.loose,
+                           flex: 6,
+                         child: Container(
                             alignment: Alignment.centerLeft,
                             padding: EdgeInsets.only(left: 15),
                             child: Text('Request# ${req.id}',
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold)),
-                          ),
-                          Expanded(
+                          )),
+                          Flexible(
+                            fit: FlexFit.loose,
+                            flex: 4,
                             child: Container(
                               alignment: Alignment.topRight,
                               child: Text(
                                 'since ${req.reqDate}',
+                                textAlign: TextAlign.right,
                                 style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.black87,
@@ -61,27 +72,30 @@ class RequestItem extends StatelessWidget {
                           )
                         ],
                       ),
-                      Flexible(
-                        fit: FlexFit.loose,
-                        flex: 5,
-                        child: Row(
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Container(
+                            Flexible(
+                              fit: FlexFit.loose,
+                              flex: 3,
+                              child: Container(
                               padding: EdgeInsets.only(top: 5, left: 15),
-                              width: 80,
                               child: Text(
-                                  'From: ',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 16),
-                                  textAlign: TextAlign.left,
-                                ),
-                            ),
-                            Expanded(
+                                'From: ',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                                textAlign: TextAlign.left,
+                              ),
+                            )),
+                            Flexible(
+                              fit: FlexFit.loose,
+                              flex: 7,
                                 child: Text('${req.from}',
                                     style: TextStyle(fontSize: 16),
-                                    textAlign: TextAlign.justify))
+                                    textAlign: TextAlign.center))
                           ],
-                        ),
+                     
                       ),
                       Flexible(
                           fit: FlexFit.loose,
@@ -89,9 +103,12 @@ class RequestItem extends StatelessWidget {
                           child: Container(
                             padding: EdgeInsets.only(left: 15, top: 5),
                             child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Container(
-                                  width: 60,
+                                Flexible(
+                                  fit: FlexFit.loose,
+                                  flex: 3,
                                   child: Text(
                                     'To: ',
                                     style: TextStyle(
@@ -99,7 +116,9 @@ class RequestItem extends StatelessWidget {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                Expanded(
+                                Flexible(
+                                  fit: FlexFit.loose,
+                                  flex: 7,
                                     child: Text(
                                   ' ${req.to}',
                                   style: TextStyle(fontSize: 16),
@@ -108,14 +127,17 @@ class RequestItem extends StatelessWidget {
                               ],
                             ),
                           )),
-                      Row(children: <Widget>[
+                      Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                          children: <Widget>[
                         Flexible(
                             fit: FlexFit.loose,
                             flex: 2,
                             child: Container(
-                                padding: EdgeInsets.only(left: 15, top: 5),
-                                width: 60,
-                                child: Text(
+                              padding: EdgeInsets.only(left: 15, top: 5),
+                              child: Text(
                                   "Car: ",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -124,14 +146,11 @@ class RequestItem extends StatelessWidget {
                         Flexible(
                           fit: FlexFit.loose,
                           flex: 8,
-                          child: Container(
-                              padding: EdgeInsets.only(top: 5),
-                              alignment: Alignment.centerLeft,
-                              child: Text(
+                          child:  Text(
                                 '${req.chassis} - ${req.model}',
+                                textAlign: TextAlign.center,
                                 style: TextStyle(fontSize: 16),
-                              )),
-                        )
+                              ))
                       ]),
                       Flexible(
                           fit: FlexFit.loose,
