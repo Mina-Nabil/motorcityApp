@@ -240,6 +240,7 @@ class CarsModel with ChangeNotifier {
               reqDate: requestaya['TKRQ_INSR_DATE'],
               startDate: requestaya['TKRQ_STRT_DATE'],
               status: requestaya['TKRQ_STTS'],
+              driverName: requestaya['DRVR_NAME'],
               comment: requestaya['TKRQ_CMNT']);
         }).toList();
 

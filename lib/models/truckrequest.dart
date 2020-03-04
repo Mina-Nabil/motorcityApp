@@ -6,15 +6,17 @@ class TruckRequest {
   String startDate;
   String chassis;
   String model;
+  String driverName;
   String km;
   String status;
   String comment;
 
-  TruckRequest({id, from, to, reqDate, startDate, chassis, model, km, status, comment}) {
+  TruckRequest({id, from, to, reqDate, startDate, chassis, model, km, status, comment, driverName}) {
     this.id = id;
     this.from = from ?? "N/A";
     this.to = to ?? "N/A";
     this.reqDate = reqDate ?? "N/A";
+    this.driverName = driverName ?? "N/A";
     this.startDate = startDate ?? "N/A";
     this.chassis = chassis ?? "N/A";
     this.model = model ?? "N/A";
@@ -33,6 +35,7 @@ class TruckRequest {
     this.model = response['TRMD_NAME'] ?? "N/A";
     this.km = response['TKRQ_KM'] ?? "N/A";
     this.comment = response['TKRQ_CMNT'] ?? "N/A";
+    this.driverName = response['DRVR_NAME'] ?? "N/A";
     this.status = response['TKRQ_STTS'] ?? "N/A";
   }
 }
