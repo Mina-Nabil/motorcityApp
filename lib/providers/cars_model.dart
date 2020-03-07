@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_background_location/flutter_background_location.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:motorcity/models/car.dart';
@@ -369,6 +370,7 @@ class CarsModel with ChangeNotifier {
       if (response.statusCode == 200) {
         final serverResponse = json.decode(cleanResponse(response.body));
         if (serverResponse['response'] == true) {
+          FlutterBackgroundLocation.stopLocationService();
           await this.loadTruckRequests(force: true);
           return true;
         } else
@@ -395,6 +397,7 @@ class CarsModel with ChangeNotifier {
       if (response.statusCode == 200) {
         final serverResponse = json.decode(cleanResponse(response.body));
         if (serverResponse['response'] == true) {
+          FlutterBackgroundLocation.stopLocationService();
           await this.loadTruckRequests(force: true);
           return true;
         } else
