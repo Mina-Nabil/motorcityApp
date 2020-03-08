@@ -11,6 +11,8 @@ class RequestItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double textFont = ((MediaQuery.of(context).size.height) > 800) ? 20 : 12;
+    print( MediaQuery.of(context).size.height);
     // TODO: implement build
     return Card(
         margin: const EdgeInsets.all(5),
@@ -24,7 +26,9 @@ class RequestItem extends StatelessWidget {
                 },
             child: Container(
               width: double.infinity,
-              height: 240,
+              height: (MediaQuery.of(context).size.height > 800)
+                  ? 260
+                  : MediaQuery.of(context).size.height / 2.5,
               padding: const EdgeInsets.all(5),
               child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                 Flexible(
@@ -45,16 +49,17 @@ class RequestItem extends StatelessWidget {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                         Flexible(
-                           fit: FlexFit.loose,
-                           flex: 6,
-                         child: Container(
-                            alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.only(left: 15),
-                            child: Text('Request# ${req.id}',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold)),
-                          )),
+                          Flexible(
+                              fit: FlexFit.loose,
+                              flex: 6,
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                padding: EdgeInsets.only(left: 15),
+                                child: Text('Request# ${req.id}',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
+                              )),
                           Flexible(
                             fit: FlexFit.loose,
                             flex: 4,
@@ -72,31 +77,35 @@ class RequestItem extends StatelessWidget {
                           )
                         ],
                       ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              fit: FlexFit.loose,
-                              flex: 3,
-                              child: Container(
+                      Flexible(
+                          fit: FlexFit.loose,
+                          flex: 5,
+                          child: Container(
                               padding: EdgeInsets.only(top: 5, left: 15),
-                              child: Text(
-                                'From: ',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                                textAlign: TextAlign.left,
-                              ),
-                            )),
-                            Flexible(
-                              fit: FlexFit.loose,
-                              flex: 7,
-                                child: Text('${req.from}',
-                                    style: TextStyle(fontSize: 18),
-                                    textAlign: TextAlign.center))
-                          ],
-                     
-                      ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Flexible(
+                                      fit: FlexFit.loose,
+                                      flex: 3,
+                                      child: Text(
+                                          'From',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: textFont),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ),
+                                  Flexible(
+                                      fit: FlexFit.loose,
+                                      flex: 7,
+                                      child: Text('${req.from}',
+                                          style: TextStyle(fontSize: textFont),
+                                          textAlign: TextAlign.center))
+                                ],
+                              ))),
                       Flexible(
                           fit: FlexFit.loose,
                           flex: 5,
@@ -110,20 +119,20 @@ class RequestItem extends StatelessWidget {
                                   fit: FlexFit.loose,
                                   flex: 3,
                                   child: Text(
-                                    'To: ',
+                                    'To',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: textFont,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Flexible(
-                                  fit: FlexFit.loose,
-                                  flex: 7,
+                                    fit: FlexFit.loose,
+                                    flex: 7,
                                     child: Text(
-                                  ' ${req.to}',
-                                  style: TextStyle(fontSize: 18),
-                                  textAlign: TextAlign.end,
-                                ))
+                                      ' ${req.to}',
+                                      style: TextStyle(fontSize: textFont),
+                                      textAlign: TextAlign.end,
+                                    ))
                               ],
                             ),
                           )),
@@ -140,73 +149,79 @@ class RequestItem extends StatelessWidget {
                                   fit: FlexFit.loose,
                                   flex: 3,
                                   child: Text(
-                                    'Driver: ',
+                                    'Driver',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: textFont,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Flexible(
-                                  fit: FlexFit.loose,
-                                  flex: 7,
+                                    fit: FlexFit.loose,
+                                    flex: 7,
                                     child: Text(
-                                  ' ${req.driverName}',
-                                  style: TextStyle(fontSize: 18),
-                                  textAlign: TextAlign.end,
-                                ))
+                                      ' ${req.driverName}',
+                                      style: TextStyle(fontSize: textFont),
+                                      textAlign: TextAlign.end,
+                                    ))
                               ],
                             ),
                           )),
-                      Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                          children: <Widget>[
-                        Flexible(
-                            fit: FlexFit.loose,
-                            flex: 3,
-                            child: Container(
-                              padding: EdgeInsets.only(left: 15, top: 5),
-                              child: Text(
-                                  "Model: ",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ))),
-                        Flexible(
+                      Flexible(
                           fit: FlexFit.loose,
-                          flex: 7,
-                          child:  Text(
-                                '${req.model}',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 16),
-                              ))
-                      ]),
-                      Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                          children: <Widget>[
-                        Flexible(
-                            fit: FlexFit.loose,
-                            flex: 3,
-                            child: Container(
+                          flex: 5,
+                          child: Container(
                               padding: EdgeInsets.only(left: 15, top: 5),
-                              child: Text(
-                                  "Chassis: ",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ))),
-                        Flexible(
+                              child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Flexible(
+                                        fit: FlexFit.loose,
+                                        flex: 3,
+                                        child: Text(
+                                              "Model",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: textFont),
+                                            )),
+                                    Flexible(
+                                        fit: FlexFit.loose,
+                                        flex: 7,
+                                        child: Text(
+                                          '${req.model}',
+                                          textAlign: TextAlign.end,
+                                          style: TextStyle(fontSize: textFont),
+                                        ))
+                                  ]))),
+                      Flexible(
                           fit: FlexFit.loose,
-                          flex: 7,
-                          child:  Text(
-                                '${req.chassis}',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 16),
-                              ))
-                      ]),
+                          flex: 5,
+                          child: Container(
+                              padding: EdgeInsets.only(left: 15, top: 5),
+                              child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Flexible(
+                                        fit: FlexFit.loose,
+                                        flex: 3,
+                                        child: Text(
+                                              "Chassis",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: textFont),
+                                            )),
+                                    Flexible(
+                                        fit: FlexFit.loose,
+                                        flex: 7,
+                                        child: Text(
+                                          '${req.chassis}',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: textFont),
+                                        ))
+                                  ]))),
                       Flexible(
                           fit: FlexFit.loose,
                           flex: 8,
@@ -215,7 +230,8 @@ class RequestItem extends StatelessWidget {
                             child: Text(
                               '${req.comment}',
                               style: TextStyle(
-                                  fontStyle: FontStyle.italic, fontSize: 15),
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: textFont),
                             ),
                           ))
                     ],
