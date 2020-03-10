@@ -370,7 +370,7 @@ class CarsModel with ChangeNotifier {
       if (response.statusCode == 200) {
         final serverResponse = json.decode(cleanResponse(response.body));
         if (serverResponse['response'] == true) {
-          FlutterBackgroundLocation.stopLocationService();
+          // FlutterBackgroundLocation.stopLocationService();
           await this.loadTruckRequests(force: true);
           return true;
         } else
@@ -397,7 +397,7 @@ class CarsModel with ChangeNotifier {
       if (response.statusCode == 200) {
         final serverResponse = json.decode(cleanResponse(response.body));
         if (serverResponse['response'] == true) {
-          FlutterBackgroundLocation.stopLocationService();
+          // FlutterBackgroundLocation.stopLocationService();
           await this.loadTruckRequests(force: true);
           return true;
         } else
