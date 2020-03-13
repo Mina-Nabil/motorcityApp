@@ -65,7 +65,7 @@ class RequestItem extends StatelessWidget {
                               child: Container(
                                 alignment: Alignment.centerLeft,
                                 padding: EdgeInsets.only(left: 15),
-                                child: Text('Request# ${req.id}',
+                                child: Text('Request #${req.id}',
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold)),

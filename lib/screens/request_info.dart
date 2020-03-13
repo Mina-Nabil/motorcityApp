@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-// import 'package:maps_launcher/maps_launcher.dart';
 import 'package:motorcity/models/truckrequest.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:motorcity/providers/cars_model.dart';
-// import 'package:url_launcher/url_launcher.dart';
 import 'package:map_launcher/map_launcher.dart' as GM;
 
 GoogleMapController controller;
@@ -149,7 +147,7 @@ class _RequestInfoState extends State<RequestInfo> {
 
   @override
   Widget build(BuildContext context) {
-    double textFont = ((MediaQuery.of(context).size.height) > 800) ? 20 : 12;
+    double textFont = ((MediaQuery.of(context).size.height) > 800) ? 20 : 14;
 
     return Scaffold(
       appBar: AppBar(
@@ -158,83 +156,306 @@ class _RequestInfoState extends State<RequestInfo> {
         style: TextStyle(fontSize: 25),
       )),
       body: SingleChildScrollView(
-          child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: <Widget>[
-            Text("Request Info",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23)),
-            Divider(),
-            Container(
-              height: 20,
-            ),
-            Container(
-              width: double.infinity,
-              height: 220,
-              child: GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(30.0355, 31.2230),
-                  zoom: 14.4746,
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(20),
+          child: Column(
+            children: <Widget>[
+              Text("Request #${widget.req.id}",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23)),
+              Divider(),
+              Container(
+                height: 10,
+              ),
+              Container(
+                width: double.infinity,
+                height: 220,
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(30.0355, 31.2230),
+                    zoom: 14.4746,
+                  ),
+                  mapType: MapType.normal,
+                  onMapCreated: (googleMapController) {
+                    controller = googleMapController;
+                    setMarkers();
+                  },
+                  markers: Set<Marker>.of(markers.values),
+                  myLocationButtonEnabled: false,
                 ),
-                mapType: MapType.normal,
-                onMapCreated: (googleMapController) {
-                  controller = googleMapController;
-                  setMarkers();
-                },
-                markers: Set<Marker>.of(markers.values),
-                myLocationButtonEnabled: false,
               ),
-            ),
-            Container(
-              height: 20,
-            ),
-            Container(
-              height: 60,
-              width: double.infinity,
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text(
-                        "From : ${widget.req.from}",
-                        style: TextStyle(fontSize: textFont),
-                      ),
-                    ),
-                    flex: 2,
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: DialogButton(
+              Container(
+                height: 10,
+              ),
+              Container(
+                height: 60,
+                width: double.infinity,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
                         child: Text(
-                          "Navigate",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                        color: Colors.purple[300],
-                        onPressed: () => _launchMap(
-                          widget.req.startLatt,
-                          widget.req.startLong,
-                          widget.req.from,
-                          widget.req.from,
+                          "Date",
+                          style: TextStyle(
+                            fontSize: textFont,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
+                      flex: 1,
                     ),
-                    flex: 1,
-                  ),
-                ],
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          "${widget.req.reqDate}",
+                          style: TextStyle(
+                            fontSize: textFont,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 10),
-              child: requestButtons(),
-            )
-          ],
+              Container(
+                height: 60,
+                width: double.infinity,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          "Driver",
+                          style: TextStyle(
+                            fontSize: textFont,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          "${widget.req.driverName}",
+                          style: TextStyle(
+                            fontSize: textFont,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: 60,
+                width: double.infinity,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          "Model",
+                          style: TextStyle(
+                            fontSize: textFont,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          "${widget.req.model}",
+                          style: TextStyle(
+                            fontSize: textFont,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: 60,
+                width: double.infinity,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          "Chassis",
+                          style: TextStyle(
+                            fontSize: textFont,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          "${widget.req.chassis}",
+                          style: TextStyle(
+                            fontSize: textFont,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: 60,
+                width: double.infinity,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          "Distance",
+                          style: TextStyle(
+                            fontSize: textFont,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          "${widget.req.km}",
+                          style: TextStyle(
+                            fontSize: textFont,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: 60,
+                width: double.infinity,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          "From : ${widget.req.from}",
+                          style: TextStyle(fontSize: textFont),
+                        ),
+                      ),
+                      flex: 2,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: DialogButton(
+                          child: Text(
+                            "Navigate",
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                          color: Colors.purple[300],
+                          onPressed: () => _launchMap(
+                            widget.req.startLatt,
+                            widget.req.startLong,
+                            widget.req.from,
+                            widget.req.from,
+                          ),
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: 10,
+              ),
+              Container(
+                height: 60,
+                width: double.infinity,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          "To : ${widget.req.to}",
+                          style: TextStyle(fontSize: textFont),
+                        ),
+                      ),
+                      flex: 2,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: DialogButton(
+                          child: Text(
+                            "Navigate",
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                          color: Colors.purple[300],
+                          onPressed: () => _launchMap(
+                            widget.req.endLatt,
+                            widget.req.endLong,
+                            widget.req.to,
+                            widget.req.to,
+                          ),
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                child: _requestButtonsBar(),
+              )
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 
@@ -249,27 +470,7 @@ class _RequestInfoState extends State<RequestInfo> {
     }
   }
 
-  // _launchURL() async {
-  //   const url = 'https://flutter.dev';
-  //   if (await canLaunch(url)) {
-  //     await launch(url);
-  //   } else {
-  //     throw 'Could not launch $url';
-  //   }
-  // }
-
-  // static Future<void> openMap(double latitude, double longitude) async {
-  //   String googleUrl =
-  //       'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
-  //   if (await canLaunch(googleUrl)) {
-  //     await launch(googleUrl);
-  //   } else {
-  //     throw 'Could not open the map.';
-  //     print("Cant open");
-  //   }
-  // }
-
-  requestButtons() {
+  _requestButtonsBar() {
     if (widget.req.status == '1') {
       return DialogButton(
         child: Text(
