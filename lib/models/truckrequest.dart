@@ -10,8 +10,27 @@ class TruckRequest {
   String km;
   String status;
   String comment;
+  double startLong;
+  double startLatt;
+  double endLong;
+  double endLatt;
 
-  TruckRequest({id, from, to, reqDate, startDate, chassis, model, km, status, comment, driverName}) {
+  TruckRequest(
+      {id,
+      from,
+      to,
+      reqDate,
+      startDate,
+      chassis,
+      model,
+      km,
+      status,
+      comment,
+      driverName,
+      startLong,
+      startLatt,
+      endLong,
+      endLatt}) {
     this.id = id;
     this.from = from ?? "N/A";
     this.to = to ?? "N/A";
@@ -23,6 +42,10 @@ class TruckRequest {
     this.km = km ?? "N/A";
     this.status = status ?? "N/A";
     this.comment = comment ?? "N/A";
+    this.startLong = startLong;
+    this.startLatt = startLatt;
+    this.endLong = endLong;
+    this.endLatt = endLatt;
   }
 
   TruckRequest.fromJson(Map<String, String> response) {
@@ -37,5 +60,9 @@ class TruckRequest {
     this.comment = response['TKRQ_CMNT'] ?? "N/A";
     this.driverName = response['DRVR_NAME'] ?? "N/A";
     this.status = response['TKRQ_STTS'] ?? "N/A";
+    this.startLong = double.parse(response['TKRQ_STRT_LONG']) ?? 0;
+    this.startLatt = double.parse(response['TKRQ_STRT_LATT']) ?? 0;
+    this.endLong = double.parse(response['TKRQ_END_LONG']) ?? 0;
+    this.endLatt = double.parse(response['TKRQ_END_LATT']) ?? 0;
   }
 }

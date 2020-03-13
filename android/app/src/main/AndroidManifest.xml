@@ -14,6 +14,10 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="MotorCity Driver"
         android:icon="@mipmap/ic_launcher">
+        
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBr2lVmpumJPZLCk3VffDODha5TPZ_4H9k"/>
+        
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -25,6 +29,7 @@
                  until Flutter renders its first frame. It can be removed if
                  there is no splash screen (such as the default splash screen
                  defined in @style/LaunchTheme). -->
+
             <meta-data
                 android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
                 android:value="true" />

@@ -95,11 +95,13 @@ class _HomePageState extends State<HomePage> {
     FlutterBackgroundLocation.startLocationService();
 
     FlutterBackgroundLocation.getLocationUpdates((location) async {
-       print("${location.latitude}  , ${location.longitude}"  );
+      //  print("${location.latitude}  , ${location.longitude}"  );
       if (location != null) {
         dbrLat.set(location.latitude);
         dbrLng.set(location.longitude);
-      } else print("Tele3 null");
+      } else {
+        // print("Tele3 null");
+      }
       await Future.delayed(Duration(seconds: 3));
     });
 

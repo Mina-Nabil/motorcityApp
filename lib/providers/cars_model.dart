@@ -242,7 +242,12 @@ class CarsModel with ChangeNotifier {
               startDate: requestaya['TKRQ_STRT_DATE'],
               status: requestaya['TKRQ_STTS'],
               driverName: requestaya['DRVR_NAME'],
-              comment: requestaya['TKRQ_CMNT']);
+              comment: requestaya['TKRQ_CMNT'],
+              startLong : double.parse(requestaya['TKRQ_STRT_LONG']) ?? 0,
+              startLatt : double.parse(requestaya['TKRQ_STRT_LATT']) ?? 0,
+              endLong : double.parse(requestaya['TKRQ_END_LONG']) ?? 0,
+              endLatt : double.parse(requestaya['TKRQ_END_LATT']) ?? 0,
+              );
         }).toList();
 
         notifyListeners();
