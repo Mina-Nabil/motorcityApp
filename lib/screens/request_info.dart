@@ -215,7 +215,12 @@ class _RequestInfoState extends State<RequestInfo> {
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                         color: Colors.purple[300],
-                        onPressed: _launchMap,
+                        onPressed: () => _launchMap(
+                          widget.req.startLatt,
+                          widget.req.startLong,
+                          widget.req.from,
+                          widget.req.from,
+                        ),
                       ),
                     ),
                     flex: 1,
@@ -233,18 +238,14 @@ class _RequestInfoState extends State<RequestInfo> {
     );
   }
 
-  _launchMap() async{
-    print("Fuck");
+  _launchMap(double lat, double lng, String title, String desc) async {
     if (await GM.MapLauncher.isMapAvailable(GM.MapType.google)) {
       await GM.MapLauncher.launchMap(
         mapType: GM.MapType.google,
-        coords: GM.Coords(31.233568, 121.505504),
-        title: "title",
-        description: "description",
+        coords: GM.Coords(lat, lng),
+        title: title,
+        description: desc,
       );
-    } else 
-    {
-      print("No");
     }
   }
 
