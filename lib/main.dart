@@ -6,7 +6,6 @@ import 'package:motorcity/providers/cars_model.dart';
 import 'package:motorcity/screens/home.dart';
 import 'package:location_permissions/location_permissions.dart';
 
-
 Future<void> main() async {
   runApp(ChangeNotifierProvider(
     builder: (context) => CarsModel(),
@@ -39,9 +38,10 @@ class _MotorCityAppState extends State<MotorCityApp> {
         initialRoute: '/',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-            fontFamily: 'NotoSerif',
-            primaryColor: Color.fromRGBO(0, 46, 72, 1),
-            accentColor: Color.fromRGBO(0, 46, 72, 0.5)),
+          fontFamily: 'NotoSerif',
+          primaryColor: Color.fromRGBO(0, 46, 72, 1),
+          accentColor: Color.fromRGBO(0, 46, 72, 0.5),
+        ),
         routes: {
           '/login': (context) => LoginPage(),
           '/home': (context) => HomePage()

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -197,6 +199,15 @@ class _RequestInfoState extends State<RequestInfo> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
+                        child: Icon(
+                          Icons.date_range,
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
                         child: Text(
                           "Date",
                           style: TextStyle(
@@ -205,7 +216,7 @@ class _RequestInfoState extends State<RequestInfo> {
                           ),
                         ),
                       ),
-                      flex: 1,
+                      flex: 2,
                     ),
                     Expanded(
                       child: Padding(
@@ -218,7 +229,7 @@ class _RequestInfoState extends State<RequestInfo> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      flex: 1,
+                      flex: 3,
                     ),
                   ],
                 ),
@@ -233,6 +244,15 @@ class _RequestInfoState extends State<RequestInfo> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
+                        child: Icon(
+                          Icons.person,
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
                         child: Text(
                           "Driver",
                           style: TextStyle(
@@ -241,7 +261,7 @@ class _RequestInfoState extends State<RequestInfo> {
                           ),
                         ),
                       ),
-                      flex: 1,
+                      flex: 2,
                     ),
                     Expanded(
                       child: Padding(
@@ -254,7 +274,7 @@ class _RequestInfoState extends State<RequestInfo> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      flex: 1,
+                      flex: 3,
                     ),
                   ],
                 ),
@@ -269,6 +289,15 @@ class _RequestInfoState extends State<RequestInfo> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
+                        child: Icon(
+                          Icons.directions_car,
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
                         child: Text(
                           "Model",
                           style: TextStyle(
@@ -277,7 +306,7 @@ class _RequestInfoState extends State<RequestInfo> {
                           ),
                         ),
                       ),
-                      flex: 1,
+                      flex: 2,
                     ),
                     Expanded(
                       child: Padding(
@@ -290,7 +319,7 @@ class _RequestInfoState extends State<RequestInfo> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      flex: 1,
+                      flex: 3,
                     ),
                   ],
                 ),
@@ -305,6 +334,15 @@ class _RequestInfoState extends State<RequestInfo> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
+                        child: Icon(
+                          Icons.fingerprint,
+                        ),
+                      ),
+                      flex: 1,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
                         child: Text(
                           "Chassis",
                           style: TextStyle(
@@ -313,7 +351,7 @@ class _RequestInfoState extends State<RequestInfo> {
                           ),
                         ),
                       ),
-                      flex: 1,
+                      flex: 2,
                     ),
                     Expanded(
                       child: Padding(
@@ -326,7 +364,7 @@ class _RequestInfoState extends State<RequestInfo> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      flex: 1,
+                      flex: 3,
                     ),
                   ],
                 ),
@@ -341,6 +379,13 @@ class _RequestInfoState extends State<RequestInfo> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
+                        child: Icon(Icons.straighten),
+                      ),
+                      flex: 1,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
                         child: Text(
                           "Distance",
                           style: TextStyle(
@@ -349,7 +394,7 @@ class _RequestInfoState extends State<RequestInfo> {
                           ),
                         ),
                       ),
-                      flex: 1,
+                      flex: 2,
                     ),
                     Expanded(
                       child: Padding(
@@ -362,7 +407,7 @@ class _RequestInfoState extends State<RequestInfo> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      flex: 1,
+                      flex: 3,
                     ),
                   ],
                 ),
@@ -377,22 +422,32 @@ class _RequestInfoState extends State<RequestInfo> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
+                        child: Icon(Icons.location_on),
+                      ),
+                      flex: 1,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
                         child: Text(
                           "From : ${widget.req.from}",
                           style: TextStyle(fontSize: textFont),
                         ),
                       ),
-                      flex: 2,
+                      flex: 3,
                     ),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: DialogButton(
                           child: Text(
-                            "Navigate",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            "Go To",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
                           ),
-                          color: Colors.purple[300],
+                          color: Theme.of(context).primaryColor,
                           onPressed: () => _launchMap(
                             widget.req.startLatt,
                             widget.req.startLong,
@@ -401,7 +456,7 @@ class _RequestInfoState extends State<RequestInfo> {
                           ),
                         ),
                       ),
-                      flex: 1,
+                      flex: 2,
                     ),
                   ],
                 ),
@@ -419,22 +474,29 @@ class _RequestInfoState extends State<RequestInfo> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
+                        child: Icon(Icons.location_on),
+                      ),
+                      flex: 1,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
                         child: Text(
                           "To : ${widget.req.to}",
                           style: TextStyle(fontSize: textFont),
                         ),
                       ),
-                      flex: 2,
+                      flex: 3,
                     ),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: DialogButton(
                           child: Text(
-                            "Navigate",
+                            "Go To",
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
-                          color: Colors.purple[300],
+                          color: Theme.of(context).primaryColor,
                           onPressed: () => _launchMap(
                             widget.req.endLatt,
                             widget.req.endLong,
@@ -443,7 +505,7 @@ class _RequestInfoState extends State<RequestInfo> {
                           ),
                         ),
                       ),
-                      flex: 1,
+                      flex: 2,
                     ),
                   ],
                 ),
@@ -460,13 +522,24 @@ class _RequestInfoState extends State<RequestInfo> {
   }
 
   _launchMap(double lat, double lng, String title, String desc) async {
-    if (await GM.MapLauncher.isMapAvailable(GM.MapType.google)) {
-      await GM.MapLauncher.launchMap(
-        mapType: GM.MapType.google,
-        coords: GM.Coords(lat, lng),
-        title: title,
-        description: desc,
-      );
+    if (Platform.isAndroid) {
+      if (await GM.MapLauncher.isMapAvailable(GM.MapType.google)) {
+        await GM.MapLauncher.launchMap(
+          mapType: GM.MapType.google,
+          coords: GM.Coords(lat, lng),
+          title: title,
+          description: desc,
+        );
+      }
+    } else if (Platform.isIOS) {
+      if (await GM.MapLauncher.isMapAvailable(GM.MapType.apple)) {
+        await GM.MapLauncher.launchMap(
+          mapType: GM.MapType.apple,
+          coords: GM.Coords(lat, lng),
+          title: title,
+          description: desc,
+        );
+      }
     }
   }
 
@@ -474,7 +547,7 @@ class _RequestInfoState extends State<RequestInfo> {
     if (widget.req.status == '1') {
       return DialogButton(
         child: Text(
-          "Confirm",
+          "Accept",
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
         onPressed: () => acceptRequest(context),
@@ -491,7 +564,7 @@ class _RequestInfoState extends State<RequestInfo> {
               padding: const EdgeInsets.all(5.0),
               child: DialogButton(
                 child: Text(
-                  "Confirm",
+                  "Complete",
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 onPressed: () => cancelRequest(context),
