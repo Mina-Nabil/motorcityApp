@@ -349,6 +349,10 @@ class CarsModel with ChangeNotifier {
       if (response.statusCode == 200) {
         final serverResponse = json.decode(cleanResponse(response.body));
         if (serverResponse['response'] == true) {
+          ///////////////HNA YA 7AWYAN
+          ///////////////el value el rag3a ml server ha3mlha print 3la weshak
+          print(serverResponse['response']);
+          ///////////////////YRAB TKON FEHEMT
           await this.loadTruckRequests(force: true);
           return true;
         } else
