@@ -1,12 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import "package:http/http.dart" as http;
 
 class FirebaseNotifications {
   FirebaseMessaging _firebaseMessaging;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   BuildContext context;
+  static final String _serverToken =
+      "AAAAb4itHww:APA91bHJ2R1E2deUfQmJ1dSeAtbaKkzihKj3yfiboYcw-EmSKeGZh5pg_OwkPDq6WFgUTps2iU-Q8xHQ7W0VJyclnchehQXhr8BUUkmsiPagHD66CCPeTG6vc8W-7Bwu-Rl4o2yX7cSw";
 
   void setUpFirebase(BuildContext context) {
     this.context = context;
@@ -67,5 +71,25 @@ class FirebaseNotifications {
         .listen((IosNotificationSettings settings) {
       //print("Settings registered: $settings");
     });
+  }
+
+  static void sendNotifications(String _title,String _body) async {
+    await http.post(
+      'https://fcm.googleapis.com/fcm/send',
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'key=$_serverToken',
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'notification': <String, dynamic>{
+            'body': '$_body',
+            'title': '$_title'
+          },
+          'priority': 'high',
+          'to': "/topics/all_trackers",
+        },
+      ),
+    );
   }
 }

@@ -1,13 +1,16 @@
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:motorcity/models/notification_handler.dart';
 import 'package:motorcity/models/truckrequest.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:motorcity/providers/cars_model.dart';
 import 'package:map_launcher/map_launcher.dart' as GM;
+import 'package:shared_preferences/shared_preferences.dart';
 
 GoogleMapController controller;
 Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -645,33 +648,6 @@ class _RequestInfoState extends State<RequestInfo> {
     ),
   );
 
-  void showCancelConfirm(context) {
-    Navigator.pop(context);
-    Alert(
-        context: context,
-        style: cancelAlertStyle,
-        image: Image.asset("assets/cancel.png"),
-        title: "Are you sure you want to cancel?",
-        buttons: [
-          DialogButton(
-            child: Text(
-              "Confirm",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            onPressed: () => cancelRequest(context),
-            color: Colors.red[300],
-          ),
-          DialogButton(
-            child: Text(
-              "Cancel",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            onPressed: () => Navigator.pop(context),
-            color: Colors.cyan[300],
-          )
-        ]).show();
-  }
-
   Future<void> cancelRequest(context) async {
     Navigator.pop(context);
     try {
@@ -682,6 +658,10 @@ class _RequestInfoState extends State<RequestInfo> {
       _showFailed();
       return false;
     }
+    FirebaseNotifications.sendNotifications(
+      "Request #${widget.req.id} Completed",
+      "${widget.req.driverName} has completed request #${widget.req.id}",
+    );
   }
 
   void _showConfirmed() {
@@ -731,5 +711,11 @@ class _RequestInfoState extends State<RequestInfo> {
       _showFailed();
       return false;
     }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString("userName");
+    FirebaseNotifications.sendNotifications(
+      "Request #${widget.req.id} Accepted",
+      "$username has accepted request #${widget.req.id}",
+    );
   }
 }
