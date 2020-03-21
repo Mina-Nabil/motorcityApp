@@ -1,28 +1,38 @@
 import 'package:motorcity/models/truckrequest.dart';
 
 import 'package:flutter/material.dart';
+import 'package:motorcity/screens/request_info.dart';
 import 'package:motorcity/widgets/requestDialog.dart';
 import 'package:motorcity/widgets/InProgressDialog.dart';
 
 class RequestItem extends StatelessWidget {
-  TruckRequest req;
+  final TruckRequest req;
 
   RequestItem(this.req);
 
   @override
   Widget build(BuildContext context) {
     double textFont = ((MediaQuery.of(context).size.height) > 800) ? 20 : 12;
-    print( MediaQuery.of(context).size.height);
-    // TODO: implement build
+    print(MediaQuery.of(context).size.height);
     return Card(
         margin: const EdgeInsets.all(5),
         color: (req.status == '1') ? Colors.green[100] : Colors.white,
         child: FlatButton(
             onPressed: () => {
-                  if (req.status == '1')
-                    RequestDialog(context, req.id).show()
-                  else if (req.status == '2')
-                    InProgressDialog(context, req.id).show()
+                  // if (req.status == '1')
+                    // RequestDialog(context, req.id).show()
+                    // {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) {
+                          return RequestInfo(
+                            context: context,
+                            req: req,
+                          );
+                        },
+                      ))
+                  //   }
+                  // else if (req.status == '2')
+                  //   InProgressDialog(context, req.id).show()
                 },
             child: Container(
               width: double.infinity,
@@ -55,7 +65,7 @@ class RequestItem extends StatelessWidget {
                               child: Container(
                                 alignment: Alignment.centerLeft,
                                 padding: EdgeInsets.only(left: 15),
-                                child: Text('Request# ${req.id}',
+                                child: Text('Request #${req.id}',
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold)),
@@ -88,16 +98,16 @@ class RequestItem extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Flexible(
-                                      fit: FlexFit.loose,
-                                      flex: 3,
-                                      child: Text(
-                                          'From',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: textFont),
-                                          textAlign: TextAlign.left,
-                                        ),
-                                      ),
+                                    fit: FlexFit.loose,
+                                    flex: 3,
+                                    child: Text(
+                                      'From',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: textFont),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ),
                                   Flexible(
                                       fit: FlexFit.loose,
                                       flex: 7,
@@ -180,11 +190,11 @@ class RequestItem extends StatelessWidget {
                                         fit: FlexFit.loose,
                                         flex: 3,
                                         child: Text(
-                                              "Model",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: textFont),
-                                            )),
+                                          "Model",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: textFont),
+                                        )),
                                     Flexible(
                                         fit: FlexFit.loose,
                                         flex: 7,
@@ -208,11 +218,11 @@ class RequestItem extends StatelessWidget {
                                         fit: FlexFit.loose,
                                         flex: 3,
                                         child: Text(
-                                              "Chassis",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: textFont),
-                                            )),
+                                          "Chassis",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: textFont),
+                                        )),
                                     Flexible(
                                         fit: FlexFit.loose,
                                         flex: 7,
