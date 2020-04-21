@@ -48,21 +48,33 @@ class TruckRequest {
     this.endLatt = endLatt;
   }
 
-  TruckRequest.fromJson(Map<String, String> response) {
-    this.id = response['TKRQ_ID'];
-    this.from = response['TKRQ_STRT_LOC'] ?? "N/A";
-    this.to = response['TKRQ_END_LOC'] ?? "N/A";
-    this.reqDate = response['TKRQ_INSR_DATE'] ?? "N/A";
-    this.startDate = response['TKRQ_STRT_DATE'] ?? "N/A";
-    this.chassis = response['TKRQ_CHSS'] ?? "N/A";
-    this.model = response['TRMD_NAME'] ?? "N/A";
-    this.km = response['TKRQ_KM'] ?? "N/A";
-    this.comment = response['TKRQ_CMNT'] ?? "N/A";
-    this.driverName = response['DRVR_NAME'] ?? "N/A";
-    this.status = response['TKRQ_STTS'] ?? "N/A";
-    this.startLong = double.parse(response['TKRQ_STRT_LONG']) ?? 0;
-    this.startLatt = double.parse(response['TKRQ_STRT_LATT']) ?? 0;
-    this.endLong = double.parse(response['TKRQ_END_LONG']) ?? 0;
-    this.endLatt = double.parse(response['TKRQ_END_LATT']) ?? 0;
+  TruckRequest.fromJson(Map<String, dynamic> response) {
+    try {
+      this.id = response['TKRQ_ID'];
+      this.from = response['TKRQ_STRT_LOC'] ?? "N/A";
+      this.to = response['TKRQ_END_LOC'] ?? "N/A";
+      this.reqDate = response['TKRQ_INSR_DATE'] ?? "N/A";
+      this.startDate = response['TKRQ_STRT_DATE'] ?? "N/A";
+      this.chassis = response['TKRQ_CHSS'] ?? "N/A";
+      this.model = response['TRMD_NAME'] ?? "N/A";
+      this.km = response['TKRQ_KM'] ?? "N/A";
+      this.comment = response['TKRQ_CMNT'] ?? "";
+      this.status = response['TKRQ_STTS'] ?? "N/A";
+      this.driverName = response['DRVR_NAME'] ?? "N/A";
+      this.startLong = (response['TKRQ_STRT_LONG'] != null)
+          ? double.parse(response['TKRQ_STRT_LONG'])
+          : 0;
+      this.startLatt = (response['TKRQ_STRT_LATT'] != null)
+          ? double.parse(response['TKRQ_STRT_LATT'])
+          : 0;
+      this.endLong = (response['TKRQ_END_LONG'] != null)
+          ? double.parse(response['TKRQ_END_LONG'])
+          : 0;
+      this.endLatt = (response['TKRQ_END_LATT'] != null)
+          ? double.parse(response['TKRQ_END_LATT'])
+          : 0;
+    } catch (e) {
+      return;
+    }
   }
 }

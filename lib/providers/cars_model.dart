@@ -75,6 +75,7 @@ class CarsModel with ChangeNotifier {
     }
     try {
       if (selectedURL == null) await initServers();
+
       if (_requestHeaders['token'] == null ||
           _requestHeaders['userType'] == null) await initHeaders();
       _pendingCars = [];
@@ -93,7 +94,6 @@ class CarsModel with ChangeNotifier {
         }
 
         Iterable l = decodedJson;
-
         l.where((car) {
           return (car['Car']['INVT_ID'] != null);
         }).forEach((car) {
@@ -206,7 +206,6 @@ class CarsModel with ChangeNotifier {
       notifyListeners();
       return true;
     }
-
     try {
       if (selectedURL == null) await initServers();
       if (_requestHeaders['token'] == null ||
@@ -218,60 +217,41 @@ class CarsModel with ChangeNotifier {
           headers: _requestHeaders,
           body: {"DriverID": userID}).timeout(Duration(seconds: 2));
       if (response.statusCode == 200) {
-        final dynamic decodedJson = json.decode(cleanResponse(response.body));
-
+        final dynamic cleanRequests = cleanResponse(response.body);
         //Check if User is Authorized
-        if (decodedJson is Map<String, dynamic> &&
-            decodedJson.containsKey("headers") &&
-            decodedJson['headers'] == false) {
+        if (cleanRequests is Map<String, dynamic> &&
+            cleanRequests.containsKey("headers") &&
+            cleanRequests['headers'] == false) {
           this.logout();
           return false;
         }
+         final Iterable decoded = json.decode(cleanRequests);
 
-        Iterable l = decodedJson;
-
-        this._requests = l.map((requestaya) {
-          return TruckRequest(
-              id: requestaya['TKRQ_ID'],
-              chassis: requestaya['TKRQ_CHSS'],
-              from: requestaya['TKRQ_STRT_LOC'],
-              to: requestaya['TKRQ_END_LOC'],
-              km: requestaya['TKRQ_KM'],
-              model: requestaya['TRMD_NAME'],
-              reqDate: requestaya['TKRQ_INSR_DATE'],
-              startDate: requestaya['TKRQ_STRT_DATE'],
-              status: requestaya['TKRQ_STTS'],
-              driverName: requestaya['DRVR_NAME'],
-              comment: requestaya['TKRQ_CMNT'],
-              startLong : double.parse(requestaya['TKRQ_STRT_LONG']) ?? 0,
-              startLatt : double.parse(requestaya['TKRQ_STRT_LATT']) ?? 0,
-              endLong : double.parse(requestaya['TKRQ_END_LONG']) ?? 0,
-              endLatt : double.parse(requestaya['TKRQ_END_LATT']) ?? 0,
-              );
-        }).toList();
-
+        decoded.forEach((tmp) => _requests.add(TruckRequest.fromJson(tmp)));
         notifyListeners();
       }
     } catch (e) {
-      // print("Exception catched: " + e.toString());
+      print("Exception catched: " + e.toString());
       notifyListeners();
       throw HttpException('Can\'t connect to the server!');
     }
     return true;
   }
 
-  Future<bool> moveCar({driverID, startLoct, endLoct, carID, km, date, comment}) async {
+  Future<bool> moveCar(
+      {driverID, startLoct, endLoct, carID, km, date, comment}) async {
     try {
-       final response =
-          await http.post(selectedURL + _moveURL, body: {
-        "DriverID": driverID,
-        "startLocation": startLoct,
-        "endLocation": endLoct,
-        "InventoryID": carID,
-        "KMs": km,
-        "Date": date,
-        "Comment": comment
-      }, headers: _requestHeaders);
+      final response = await http.post(selectedURL + _moveURL,
+          body: {
+            "DriverID": driverID,
+            "startLocation": startLoct,
+            "endLocation": endLoct,
+            "InventoryID": carID,
+            "KMs": km,
+            "Date": date,
+            "Comment": comment
+          },
+          headers: _requestHeaders);
       if (response.statusCode == 200) {
         final dynamic decodedJson = jsonDecode(cleanResponse(response.body));
 
@@ -290,7 +270,7 @@ class CarsModel with ChangeNotifier {
           return true;
         }
       }
-    } catch (e){
+    } catch (e) {
       return false;
     }
     return false;
@@ -306,11 +286,12 @@ class CarsModel with ChangeNotifier {
         var token = loginBody['token'];
         if (id != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString("userID",  id);
+          await prefs.setString("userID", id);
           await prefs.setString("userName", user);
           await prefs.setString("token", token);
           await prefs.setString("userType", "driver");
-          await prefs.setString("date", DateTime.now().millisecondsSinceEpoch.toString());
+          await prefs.setString(
+              "date", DateTime.now().millisecondsSinceEpoch.toString());
 
           initHeaders();
 
@@ -320,7 +301,7 @@ class CarsModel with ChangeNotifier {
           return true;
         } else
           return false;
-      } else{
+      } else {
         print(response.statusCode.toString());
         return false;
       }
@@ -420,11 +401,10 @@ class CarsModel with ChangeNotifier {
 
 /////////////////////////Model Management Functions/////////////////////////////
   Future<void> initServers() async {
-
     if (selectedURL == null) {
       final directory = await getApplicationDocumentsDirectory();
-      final pgFile    =  new File("${directory.path}/pg_server.txt");
-      final mgFile   =  new File("${directory.path}/mg_server.txt");
+      final pgFile = new File("${directory.path}/pg_server.txt");
+      final mgFile = new File("${directory.path}/mg_server.txt");
       mgServerIP = await mgFile.readAsString();
       peugeotServerIP = await pgFile.readAsString();
 
@@ -442,10 +422,8 @@ class CarsModel with ChangeNotifier {
 
   Future<void> initHeaders() async {
     final prefs = await SharedPreferences.getInstance();
-    this._requestHeaders.addAll({
-      "token": prefs.get("token"),
-      "userType": prefs.get("userType")
-    });
+    this._requestHeaders.addAll(
+        {"token": prefs.get("token"), "userType": prefs.get("userType")});
   }
 
   void setServersIP(peugeotIP, mgIP) async {
@@ -458,11 +436,10 @@ class CarsModel with ChangeNotifier {
     peugeotServerIP = peugeotIP;
     //Writing IPs to files
     final directory = await getApplicationDocumentsDirectory();
-    final pgFile    =  new File("${directory.path}/pg_server.txt");
-    final mgFile   =  new File("${directory.path}/mg_server.txt");
+    final pgFile = new File("${directory.path}/pg_server.txt");
+    final mgFile = new File("${directory.path}/mg_server.txt");
     pgFile.writeAsString(peugeotServerIP);
     mgFile.writeAsString(mgServerIP);
-
 
     final prefs = await SharedPreferences.getInstance();
 
@@ -493,7 +470,7 @@ class CarsModel with ChangeNotifier {
     //_resetAllData(force: true);
   }
 
-  Future<void> _resetAllData({force=false}) async {
+  Future<void> _resetAllData({force = false}) async {
     await loadInventory(force: force);
     await loadLocations(force: force);
     await loadCars(force: force);
@@ -507,24 +484,25 @@ class CarsModel with ChangeNotifier {
   Future<bool> checkIfAuthenticated() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final pgFile    =  new File("${directory.path}/pg_server.txt");
-      final mgFile   =  new File("${directory.path}/mg_server.txt");
+      final pgFile = new File("${directory.path}/pg_server.txt");
+      final mgFile = new File("${directory.path}/mg_server.txt");
       mgServerIP = await mgFile.readAsString();
       peugeotServerIP = await pgFile.readAsString();
 
-      if(mgServerIP == null && peugeotServerIP == null){
+      if (mgServerIP == null && peugeotServerIP == null) {
         return false;
       }
 
       final prefs = await SharedPreferences.getInstance();
       var userID = prefs.get("userID");
       var date = prefs.get("date");
-      if(date==null) {
+      if (date == null) {
         await logout();
         return false;
-        }
+      }
       int lastLogin = int.parse(date);
-      if (userID != null && lastLogin > DateTime.now().add(Duration(hours: 12)).millisecond ) {
+      if (userID != null &&
+          lastLogin > DateTime.now().add(Duration(hours: 12)).millisecond) {
         this.setUserID(userID);
         _isAuthenticated = true;
         return true;
