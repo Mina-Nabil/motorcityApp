@@ -570,7 +570,7 @@ class _RequestInfoState extends State<RequestInfo> {
                   "Complete",
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
-                onPressed: () => cancelRequest(context),
+                onPressed: () => completeRequest(context) ,
                 color: Colors.green[300],
                 //gradient: LinearGradient(colors: [Colors.cyan, Colors.cyan[100]])
               ),
@@ -584,7 +584,7 @@ class _RequestInfoState extends State<RequestInfo> {
                   "Cancel",
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => cancelRequest(context),
                 color: Colors.red[300],
                 //gradient: LinearGradient(colors: [Colors.cyan, Colors.cyan[100]])
               ),
@@ -718,4 +718,16 @@ class _RequestInfoState extends State<RequestInfo> {
       "$username has accepted request #${widget.req.id}",
     );
   }
+
+    Future<void> completeRequest(context) async {
+    Navigator.pop(context);
+    try {
+      bool res = await Provider.of<CarsModel>(context).completeTruckRequest(widget.req.id);
+      (res) ? _showConfirmed() : _showFailed();
+    } catch (e) {
+      _showFailed();
+      return false;
+    }
+  }
+
 }
