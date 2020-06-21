@@ -414,7 +414,7 @@ class CarsModel with ChangeNotifier {
       // peugeotServerIP = prefs.getString(_pgKey) ?? "";
 
       mgServer = "http://" + mgServerIP + "/motorcity/api/";
-      peugeotServer = "http://" + peugeotServerIP + "/motorcity/api/";
+      peugeotServer = "http://" + peugeotServerIP + "/peugeot/api/";
 
       selectedURL = prefs.getString(_selectedKey) ?? peugeotServer;
     }
