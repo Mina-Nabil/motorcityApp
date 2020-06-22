@@ -444,7 +444,7 @@ class CarsModel with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
 
     mgServer = "http://" + mgServerIP + "/motorcity/api/";
-    peugeotServer = "http://" + peugeotServerIP + "/motorcity/api/";
+    peugeotServer = "http://" + peugeotServerIP + "/peugeot/api/";
 
     if (selectedIP == 1)
       selectedURL = peugeotServer;
