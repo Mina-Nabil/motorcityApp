@@ -11,14 +11,15 @@ description: A project for managing Motorcity's inventory movement. App built fo
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.4.2+7
+version: 1.6+11
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
 
-dependencies:
+dependencies:                        
   flutter:
     sdk: flutter
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -46,6 +47,8 @@ dependencies:
   firebase_messaging: ^6.0.9
   flutter_local_notifications: ^0.9.1+3
   path_provider: ^1.6.4
+  google_maps_flutter: ^0.5.24+1
+  map_launcher: ^0.4.3
 
 
 dev_dependencies:
